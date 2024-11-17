@@ -6,7 +6,7 @@
 // DEKLARASI FUNGSI DAN PROSEDUR WORDL3 
 // Constants applied both in wordl3 and quantum wordl3
 #define WORD_LENGTH 5   // Length of each word 
-#define MAX_ATTEMPTS 9  // Maximum number of attempts
+#define MAX_ATTEMPTS 5  // Maximum number of attempts
 #define NUM_WORDS 4     // Number of words in Quantum Wordle
 
 void evaluateGuess(const char *target, const char *guess, char *result); // applied both in wordl3 and quantum wordl3
@@ -16,6 +16,7 @@ void playWordl3();
 
 // DEKLARASI FUNGSI DAN PROSEDUR QUANTUM WORDL3 
 typedef unsigned int size_t;
+#define MAX_ATTEMPTS_Q 5
 
 size_t my_strlen(const char *str);
 void my_strcpy(char *dest, const char *src);
