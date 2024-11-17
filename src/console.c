@@ -151,7 +151,7 @@ void playWordl3() {
 
 // IMPLEMENTASI FUNGSI DAN PROSEDUR QUANTUM WORDL3
 
-char board[NUM_WORDS][MAX_ATTEMPTS][WORD_LENGTH * 3 + 1];
+char board[NUM_WORDS][MAX_ATTEMPTS_Q][WORD_LENGTH * 3 + 1];
 
 size_t my_strlen(const char *str) {
     size_t length = 0;
@@ -262,7 +262,7 @@ void playQuantumWordl3() {
 
     // Initialize the game board
     for (int w = 0; w < NUM_WORDS; w++) {
-        for (int a = 0; a < MAX_ATTEMPTS; a++) {
+        for (int a = 0; a < MAX_ATTEMPTS_Q; a++) {
             for (int j = 0; j < WORD_LENGTH * 3; j += 3) {
                 board[w][a][j] = '_';
                 board[w][a][j + 1] = ' ';
@@ -277,13 +277,13 @@ void playQuantumWordl3() {
     boolean win = FALSE;
     char guesses[NUM_WORDS][WORD_LENGTH + 1];
 
-    printf("WELCOME TO QUANTUM W0RDL3! YOU HAVE %d CHANCES TO GUESS ALL FOUR WORDS.\n", MAX_ATTEMPTS);
+    printf("WELCOME TO QUANTUM W0RDL3! YOU HAVE %d CHANCES TO GUESS ALL FOUR WORDS.\n", MAX_ATTEMPTS_Q);
 
-    while (attempts < MAX_ATTEMPTS && !win) {
+    while (attempts < MAX_ATTEMPTS_Q && !win) {
         // Display the board
         for (int w = 0; w < NUM_WORDS; w++) {
             printf("Word %d:\n", w + 1);
-            for (int a = 0; a < MAX_ATTEMPTS; a++) {
+            for (int a = 0; a < MAX_ATTEMPTS_Q; a++) {
                 printf("%s\n", board[w][a]);
             }
             printf("\n");
@@ -311,7 +311,7 @@ void playQuantumWordl3() {
     // Display final results
     for (int w = 0; w < NUM_WORDS; w++) {
         printf("Word %d:\n", w + 1);
-        for (int a = 0; a < MAX_ATTEMPTS; a++) {
+        for (int a = 0; a < MAX_ATTEMPTS_Q; a++) {
             printf("%s\n", board[w][a]);
         }
         printf("\n");
