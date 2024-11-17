@@ -15,8 +15,8 @@ char *copy(char *dest, const char *src);
 void playWordl3();
 
 // DEKLARASI FUNGSI DAN PROSEDUR QUANTUM WORDL3 
-typedef unsigned int size_t;
-#define MAX_ATTEMPTS_Q 5
+typedef unsigned int size_t
+#define MAX_ATTEMPTS_Q 9
 
 size_t my_strlen(const char *str);
 void my_strcpy(char *dest, const char *src);
