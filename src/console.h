@@ -3,6 +3,7 @@
 
 #include "boolean.h"
 #include <stddef.h> // Include this header for size_t
+#include "mesinkata.h" //
 
 // DEKLARASI FUNGSI DAN PROSEDUR WORDL3 
 // Constants applied both in wordl3 and quantum wordl3
@@ -26,5 +27,23 @@ void playQuantumWordl3();
 
 // DEKLARASI PROSEDUR HELP
 void Help(int x);
+
+// DEKLARASI FUNGSI DAN PROSEDUR UNTUK WORK
+
+typedef struct // DEKLARASI STRUCT WORK
+{
+    char workName[100]; //nama pekerjaan
+    int workPayment;    //gaji
+    int workDuration;   //durasi kerja
+} Work;
+
+#ifdef _WIN32
+    #include <windows.h> // buat tes di windows
+#else
+    #include <unistd.h>  // spek tubes hrs bisa di linux
+#endif
+
+void portable_sleep(int milliseconds); // fungsi untuk sleep (delay durasi kerja)
+void collectInput(char *input); // fungsi pengumpulan input
 
 #endif // CONSOLE_H
