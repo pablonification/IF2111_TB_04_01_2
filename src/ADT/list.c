@@ -55,11 +55,11 @@ boolean IsIdxEff (List L, IdxType i) {
 boolean Search(List L, ElType X) {
 	int i = FirstIdx(L);
 	int j = LastIdx(L);
-	boolean found = false;
+	boolean found = FALSE;
 	while ((i <= j) && !found) {
 		i += 1;
 		if (L.A[i] == X) {
-			found = true;
+			found = TRUE;
 		}
 	}
     return found;
