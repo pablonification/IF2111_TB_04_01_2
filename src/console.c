@@ -9,40 +9,40 @@
 
 char board[MAX_ATTEMPTS][WORD_LENGTH * 3 + 1];
 
-void evaluateGuess(const char *target, const char *guess, char *result) {
-    int matched[WORD_LENGTH] = {0}; // Tracks exact matches
-    int used[WORD_LENGTH] = {0};    // Tracks letters used for wrong positions
+// void evaluateGuess(const char *target, const char *guess, char *result) {
+//     int matched[WORD_LENGTH] = {0}; // Tracks exact matches
+//     int used[WORD_LENGTH] = {0};    // Tracks letters used for wrong positions
 
-    // Check for exact matches
-    for (int i = 0; i < WORD_LENGTH; i++) {
-        if (guess[i] == target[i]) {
-            result[i * 3] = target[i]; 
-            result[i * 3 + 1] = ' ';  
-            result[i * 3 + 2] = ' ';  
-            matched[i] = 1;           
-            used[i] = 1;              
-        } else {
-            result[i * 3] = guess[i]; 
-            result[i * 3 + 1] = '%';  
-            result[i * 3 + 2] = ' ';  
-        }
-    }
+//     // Check for exact matches
+//     for (int i = 0; i < WORD_LENGTH; i++) {
+//         if (guess[i] == target[i]) {
+//             result[i * 3] = target[i]; 
+//             result[i * 3 + 1] = ' ';  
+//             result[i * 3 + 2] = ' ';  
+//             matched[i] = 1;           
+//             used[i] = 1;              
+//         } else {
+//             result[i * 3] = guess[i]; 
+//             result[i * 3 + 1] = '%';  
+//             result[i * 3 + 2] = ' ';  
+//         }
+//     }
 
-    // Check for wrong-position matches
-    for (int i = 0; i < WORD_LENGTH; i++) {
-        if (result[i * 3 + 1] == '%') { 
-            for (int j = 0; j < WORD_LENGTH; j++) {
-                if (!matched[j] && !used[j] && guess[i] == target[j]) {
-                    result[i * 3 + 1] = '*'; 
-                    used[j] = 1;            
-                    break;
-                }
-            }
-        }
-    }
+//     // Check for wrong-position matches
+//     for (int i = 0; i < WORD_LENGTH; i++) {
+//         if (result[i * 3 + 1] == '%') { 
+//             for (int j = 0; j < WORD_LENGTH; j++) {
+//                 if (!matched[j] && !used[j] && guess[i] == target[j]) {
+//                     result[i * 3 + 1] = '*'; 
+//                     used[j] = 1;            
+//                     break;
+//                 }
+//             }
+//         }
+//     }
 
-    result[WORD_LENGTH * 3] = '\0';
-}
+//     result[WORD_LENGTH * 3] = '\0';
+// }
 
 int compareWords(const char *word1, const char *word2) {
     for (int i = 0; i < WORD_LENGTH; i++) {
@@ -151,7 +151,7 @@ void playWordl3() {
 
 // IMPLEMENTASI FUNGSI DAN PROSEDUR QUANTUM WORDL3
 
-char board[NUM_WORDS][MAX_ATTEMPTS_Q][WORD_LENGTH * 3 + 1];
+char quantumBoard[NUM_WORDS][MAX_ATTEMPTS_Q][WORD_LENGTH * 3 + 1];
 
 size_t my_strlen(const char *str) {
     size_t length = 0;
@@ -264,11 +264,11 @@ void playQuantumWordl3() {
     for (int w = 0; w < NUM_WORDS; w++) {
         for (int a = 0; a < MAX_ATTEMPTS_Q; a++) {
             for (int j = 0; j < WORD_LENGTH * 3; j += 3) {
-                board[w][a][j] = '_';
-                board[w][a][j + 1] = ' ';
-                board[w][a][j + 2] = ' ';
+                quantumBoard[w][a][j] = '_';
+                quantumBoard[w][a][j + 1] = ' ';
+                quantumBoard[w][a][j + 2] = ' ';
             }
-            board[w][a][WORD_LENGTH * 3] = '\0'; // Null-terminate
+            quantumBoard[w][a][WORD_LENGTH * 3] = '\0'; // Null-terminate
         }
     }
 
@@ -284,7 +284,7 @@ void playQuantumWordl3() {
         for (int w = 0; w < NUM_WORDS; w++) {
             printf("Word %d:\n", w + 1);
             for (int a = 0; a < MAX_ATTEMPTS_Q; a++) {
-                printf("%s\n", board[w][a]);
+                printf("%s\n", quantumBoard[w][a]);
             }
             printf("\n");
         }
@@ -297,7 +297,7 @@ void playQuantumWordl3() {
 
         // Evaluate guesses and update the board
         for (int w = 0; w < NUM_WORDS; w++) {
-            evaluateGuess(targets[w], guesses[w], board[w][attempts]);
+            evaluateGuess(targets[w], guesses[w], quantumBoard[w][attempts]);
         }
 
         // Check if all words are guessed correctly
