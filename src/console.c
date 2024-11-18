@@ -361,13 +361,10 @@ void Help(int x){
 
 //IMPLEMENTASI FUNGSI DAN PROSEDUR WORK
 
-//Implementasi fungsi sleep(delay durasi kerja)
-void portable_sleep(int milliseconds) {
-#ifdef _WIN32
-    Sleep(milliseconds); // Windows Sleep pake mili
-#else
-    usleep(milliseconds * 1000); // usleep pake mikro jd dikali serebu (buat mac sama linux)
-#endif
+//Implementasi fungsi delay
+void delay(int seconds) {
+    time_t start_time = time(NULL);
+    while (time(NULL) - start_time < seconds);
 }
 
 //Implementasi fungsi pengumpulan input
@@ -433,7 +430,7 @@ void work(int balance){
     }
 
     printf("Anda sedang bekerja sebagai %s. Harap tunggu...\n", selectedWork);
-    portable_sleep(workList[selectedWorkIndex].workDuration * 1000);
+    delay(workList[selectedWorkIndex].workDuration);
     printf("Pekerjaan telah selesai. Anda mendapatkan gaji $%d\n", workList[selectedWorkIndex].workPayment);
 
     balance += workList[selectedWorkIndex].workPayment;
