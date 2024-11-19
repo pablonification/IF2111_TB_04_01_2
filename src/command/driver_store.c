@@ -5,5 +5,6 @@ void storelist();
 
 int main() {
     storelist();
+    
     return 0;
 }
