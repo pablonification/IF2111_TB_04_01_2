@@ -13,13 +13,12 @@
 //     char name[100];
 // } List;
 
-
 void storelist ();
 // I.S List bisa saja kosong
 // F.S Jika list kosong, mencetak "TOKO KOSONG"
 // Jika list tidak kosong, mencetak seluruh barang yang ada di toko
 
-// void remove(List L);
+void remove(List L);
 
-// void request (List *L, Queue *Q);
+void request (List *L, Queue *Q);
 #endif
