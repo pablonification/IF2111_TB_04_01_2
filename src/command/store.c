@@ -28,12 +28,6 @@ void storelist () {
 }
 
 
-    // item itemList[] = {
-    // {20, "AK47"},
-    // {20, "Lalabu"},
-    // {10, "Ayam Goreng Crisbar"}
-    // };
-
     // int itemCount = sizeof(itemList) / sizeof(itemList[0]);
     
 void request (List *L, Queue *Q) {
