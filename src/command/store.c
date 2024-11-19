@@ -26,9 +26,7 @@ void storelist () {
     printf("\n");
     // }
 }
-
-
-    // int itemCount = sizeof(itemList) / sizeof(itemList[0]);
+  // int itemCount = sizeof(itemList) / sizeof(itemList[0]);
     
 void request (List *L, Queue *Q) {
     char req;

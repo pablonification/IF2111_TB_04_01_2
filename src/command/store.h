@@ -12,7 +12,6 @@
 //     int price;
 //     char name[100];
 // } List;
-
 void storelist ();
 // I.S List bisa saja kosong
 // F.S Jika list kosong, mencetak "TOKO KOSONG"
