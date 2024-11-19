@@ -37,13 +37,7 @@ typedef struct // DEKLARASI STRUCT WORK
     int workDuration;   //durasi kerja
 } Work;
 
-#ifdef _WIN32
-    #include <windows.h> // buat tes di windows
-#else
-    #include <unistd.h>  // spek tubes hrs bisa di linux
-#endif
-
-void portable_sleep(int milliseconds); // fungsi untuk sleep (delay durasi kerja)
+void delay(int seconds); // fungsi delay
 void collectInput(char *input); // fungsi pengumpulan input
 
 #endif // CONSOLE_H
