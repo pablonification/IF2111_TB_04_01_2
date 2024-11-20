@@ -3,7 +3,7 @@
 #include "../ADT/mesinkata.h"
 #include "../ADT/mesinkarakter.h"
 
-void storelist () {
+void storeList () {
    
     printf(" _____ _____ ___________ _____ _     _____ _____ _____ \n");
     printf("/  ___|_   _|  _  | ___ \\  ___| |   |_   _/  ___|_   _|\n");
@@ -28,7 +28,7 @@ void storelist () {
 }
   // int itemCount = sizeof(itemList) / sizeof(itemList[0]);
   
-void request (List *L, Queue *Q) {
+void storeRequest (List *L, Queue *Q) {
     char req;
     char val;
     boolean found = 0;
@@ -67,7 +67,7 @@ void request (List *L, Queue *Q) {
     }
 }
 
-void remove(List L) {
+void storeRemove(List L) {
     char item_name[100];
     printf("Nama barang yang akan dihapus: ");
     scanWord(&item_name);
