@@ -1,7 +1,7 @@
 #ifndef MISC_H
 #define MISC_H
 
-#include "mesinkata.h"
+#include "ADT/mesinkata.h"
 
 void scanWord(Word *inputWord);
 int convertWordToInt(Word inputWord);
