@@ -3,7 +3,7 @@
 #include "../ADT/mesinkata.h"
 #include "../ADT/mesinkarakter.h"
 
-void storeList () {
+void storeList (ListBarang L, Queue Q) {
    
     printf(" _____ _____ ___________ _____ _     _____ _____ _____ \n");
     printf("/  ___|_   _|  _  | ___ \\  ___| |   |_   _/  ___|_   _|\n");
@@ -15,20 +15,22 @@ void storeList () {
 
     printf("List barang yang ada di toko: \n");
     
-    STARTWORDFILE("config.txt");
-    // if (IsEmpty(itemList)) {
-    //     printf("TOKO KOSONG");
-    // }
-    // else { 
-        printf("- ");
-        printf("%s", currentWord);
+    if (IsEmpty(L)) {
+        printf("TOKO KOSONG");
+    }
+    else { 
+        for (int i  = 0; i < Length(L); i ++) {
+            printf("- ");
+            printf("%s", L.item[i]);
+        }
     // }   
     printf("\n");
     // }
+    }
 }
   // int itemCount = sizeof(itemList) / sizeof(itemList[0]);
   
-void storeRequest (List *L, Queue *Q) {
+void storeRequest (ListBarang *L, Queue *Q) {
     char req;
     char val;
     boolean found = 0;
@@ -37,7 +39,7 @@ void storeRequest (List *L, Queue *Q) {
     scanWord(&req);
     printf("\n");
 
-    for (int i = 0; i < itemCount; i++) {
+    for (int i = 0; i < Length(*L); i++) {
         if (isEmpty(*Q) && Search(*L,req)) {
             printf("Barang dengan nama yang sama sudah ada di toko\n");
         }
@@ -45,7 +47,7 @@ void storeRequest (List *L, Queue *Q) {
             enqueue(Q, req);
         }
         else if (!isEmpty(*Q) && !Search(*L,req)) {
-            while(!isEmpty(*Q) && !found) { // gmn kalo pake for sepanjang length queue biar ga ngubah urutan antrian
+            for (int i = 0; i < length(*Q); i++) { // gmn kalo pake for sepanjang length queue biar ga ngubah urutan antrian
                 dequeue(Q, &val);           // jadi semuanya kedequeue enqueue
                 if (val == req) {
                     enqueue(Q, val);
@@ -53,8 +55,7 @@ void storeRequest (List *L, Queue *Q) {
                 }
                 else {
                     enqueue(Q, val);
-                }
-                
+                }   
             }
 
             if (found) {
@@ -67,7 +68,7 @@ void storeRequest (List *L, Queue *Q) {
     }
 }
 
-void storeRemove(List L) {
+void storeRemove(ListBarang L) {
     char item_name[100];
     printf("Nama barang yang akan dihapus: ");
     scanWord(&item_name);
@@ -77,12 +78,13 @@ void storeRemove(List L) {
     int i = 0;
 
     while (!IsEmpty(L) || found) {
-        if (item_name == L.A[i]) {
+        if (item_name == L.item[i]) {
             found = 1;
         }
         else {
             found = 0;
         }
+        i++;
     }
 
     if (found) {
