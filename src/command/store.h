@@ -12,15 +12,15 @@
 //     int price;
 //     char name[100];
 // } List;
-void storeList ();
+void storeList (ListBarang L);
 // I.S List bisa saja kosong
 // F.S Jika list kosong, mencetak "TOKO KOSONG"
 // Jika list tidak kosong, mencetak seluruh barang yang ada di toko
 
-void storeRemove(List L);
+void storeRemove(ListBarang L);
 
-void storeRequest (List *L, Queue *Q);
+void storeRequest (ListBarang *L, Queue *Q);
 
-void storeSupply(List *L, Queue *Q);
+void storeSupply(ListBarang *L, Queue *Q);
 
 #endif
