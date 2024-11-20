@@ -25,19 +25,4 @@ int my_strcmp(const char *str1, const char *str2);
 boolean allWordsGuessed(const char targets[NUM_WORDS][WORD_LENGTH + 1], const char guesses[NUM_WORDS][WORD_LENGTH + 1]);
 void playQuantumWordl3();
 
-// DEKLARASI PROSEDUR HELP
-void Help(int x);
-
-// DEKLARASI FUNGSI DAN PROSEDUR UNTUK WORK
-
-typedef struct // DEKLARASI STRUCT WORK
-{
-    char workName[100]; //nama pekerjaan
-    int workPayment;    //gaji
-    int workDuration;   //durasi kerja
-} Work;
-
-void delay(int seconds); // fungsi delay
-void collectInput(char *input); // fungsi pengumpulan input
-
 #endif // CONSOLE_H
