@@ -45,8 +45,8 @@ void storeRequest (List *L, Queue *Q) {
             enqueue(Q, req);
         }
         else if (!isEmpty(*Q) && !Search(*L,req)) {
-            while(!isEmpty(*Q) && !found) {
-                dequeue(Q, &val);
+            while(!isEmpty(*Q) && !found) { // gmn kalo pake for sepanjang length queue biar ga ngubah urutan antrian
+                dequeue(Q, &val);           // jadi semuanya kedequeue enqueue
                 if (val == req) {
                     enqueue(Q, val);
                     found = 1;
@@ -90,6 +90,35 @@ void storeRemove(List L) {
     }
     else {
         pritnf("Toko tidak menjual %s.", item_name);
+    }
+}
+
+void storeSupply(List *L, Queue *Q) { //asumsi L adalah list ber-Eltype Barang. tapi jadi beda sih sama implementasinya veli nanti tolong bahas lagi:'(
+    char item_name[50];
+    dequeue(&Q, &item_name);
+    printf("Apakah kamu ingin menambahkan barang %s ke toko? (Terima/Tunda/Tolak: ", item_name);
+
+    char response[10];
+    scanWord(&response);
+
+    if (mystrcmp(response, "Terima") == 0) {
+        int price;
+        printf("Harga barang: ");
+        scanWord(&price); // ini harusnya scanInt tapi belum ada hehe
+        Barang new_item = {item_name, price};
+
+        InsertLast(L, new_item);
+        printf("%s dengan harga %d telah ditambahkan ke toko.\n", item_name, price);
+    }
+    else if (mystrcmp(response, "Tunda") == 0) {
+        enqueue(Q, item_name);
+        printf("%s dikembalikan ke antrian.\n", item_name);
+    }
+    else if (mystrcmp(response, "Tolak") == 0) {
+        printf("%s dihapus dari antrian.\n", item_name);
+    }
+    else{
+        printf("Input tidak valid.\n"); // kembali ke menu
     }
 }
 

@@ -20,6 +20,7 @@ void storeList ();
 void storeRemove(List L);
 
 void storeRequest (List *L, Queue *Q);
+
 void storeSupply(List *L, Queue *Q);
 
 #endif
