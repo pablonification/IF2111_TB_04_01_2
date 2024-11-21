@@ -31,3 +31,63 @@ void displayWordWithNewline(Word W) {
    F.S. : Isi Word ditampilkan ke layar dengan newline */
     displayWord(W, TRUE);
 }
+
+int stringLength(char *str) {
+/* Mengembalikan panjang dari string
+    I.S : String sembarang
+    F.S : Panjang string dikembalikan */
+    int len = 0;
+    while (str[len] != '\0') len++;
+    return len;
+}
+
+void stringCopy(char *dest, char *src) {
+/* Mengembalikan panjang dari string
+    I.S : String tersalin dan hasil
+          String sembarang
+    F.S : Panjang string dikembalikan */
+    int i = 0;
+    while (src[i] != '\0') {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0';
+}
+
+void stringConcat(char *dest, const char *src) {
+/* Mengembalikan panjang dari string
+    I.S : 2 string sembarang
+    F.S : Panjang string dikembalikan */
+    int destLen = stringLength(dest);
+    int i = 0;
+    while (src[i] != '\0') {
+        dest[destLen + i] = src[i];
+        i++;
+    }
+    dest[destLen + i] = '\0';
+}
+
+boolean stringEqual(char *str1, char *str2) {
+/* Mengembalikan panjang dari string
+    I.S : 2 string sembarang
+    F.S : Boolean str1 == str2*/
+    int i = 0;
+    while (str1[i] != '\0' && str2[i] != '\0') {
+        if (str1[i] != str2[i]) return FALSE;
+        i++;
+    }
+    return str1[i] == str2[i];
+}
+
+void wordToString(Word word, char *str) {
+/* Mengembalikan panjang dari string
+    I.S : Word dan string sembarang
+    F.S : Panjang string dikembalikan */
+    int i;
+    for (i = 0; i < word.Length; i++) {
+        str[i] = word.TabWord[i];
+    }
+    str[i] = '\0';
+}
+
+
