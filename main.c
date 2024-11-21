@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "main.h"
 
-// Variabel Global
 int isLoggedIn = 0;
 char currentUser[MAX_LEN];
 boolean isConfigLoaded = FALSE;
@@ -57,7 +56,7 @@ void showMainMenu(){
             
             char filename[MAX_LEN];
             scanf("%s", filename);
-            Load(filename, &gameState); // Passing pointer
+            Load(filename, &gameState); 
             if (gameState.isInitialized) {
                 isConfigLoaded = TRUE;
             }
@@ -68,23 +67,28 @@ void showMainMenu(){
                 continue;
             }
             Login(gameState.users, gameState.userCount);
-        }else if (customStringCMP(command, "REGISTER") == 0) {
+        }
+        else if (customStringCMP(command, "REGISTER") == 0) {
             if (!isConfigLoaded) {
                 printf("Anda harus LOAD file konfigurasi terlebih dahulu.\n");
                 continue;
             }
             Register(&gameState);
-        }else if (customStringCMP(command, "SAVE") == 0) {
+        }
+        else if (customStringCMP(command, "SAVE") == 0) {
             char filename[MAX_LEN];
             printf("Masukkan nama file untuk menyimpan: ");
             scanf("%s", filename);
             Save(filename, &gameState);
-        }else if (customStringCMP(command, "HELP") == 0) {
+        }
+        else if (customStringCMP(command, "HELP") == 0) {
             printf("Commands: START, LOAD <filename>, SAVE <filename> LOGIN, REGISTER, HELP, QUIT\n");
-        }else if (customStringCMP(command, "QUIT") == 0) {
+        }
+        else if (customStringCMP(command, "QUIT") == 0) {
             printf("Goodbye!\n");
             break;
-        } else {
+        } 
+        else {
             printf("Unknown command. Type HELP for a list of commands.\n");
         }
     }
@@ -128,7 +132,7 @@ void Load(const char *filename, GameState *gameState) {
     rewind(file);
     
     if (size == 0) {
-        printf("Error: File kosong\n");
+        printf("File kosong\n");
         fclose(file);
         return;
     }
@@ -204,7 +208,7 @@ boolean loadGameState(GameState *gameState, const char *filename) {
 int findUser(User *users, int user_count, const char *username, const char *password) {
     for (int i = 0; i < user_count; i++) {
         if (customStringCMP(users[i].name, username) == 0 && 
-            customStringCMP(users[i].password, password) == 0) {  // Tambahkan == 0
+            customStringCMP(users[i].password, password) == 0) { 
             return i;
         }
     }
@@ -254,7 +258,7 @@ void Register(GameState *gameState) {
     scanf("%s", password);
 
     if (gameState->userCount >= MAX_USERS) {
-        printf("Error: Maksimum jumlah pengguna telah tercapai.\n");
+        printf("Maksimum jumlah pengguna telah tercapai.\n");
         return;
     }
 
@@ -288,12 +292,6 @@ void Save(const char *filename, GameState *gameState) {
         return;
     }
 
-    // Format penulisan mengikuti format config.txt:
-    // <jumlah_item>
-    // <harga> <nama_item>
-    // <jumlah_user>
-    // <saldo> <username> <password>
-
     fprintf(file, "%d\n", gameState->itemList.jumlahItem);
 
     for (int i = 0; i < gameState->itemList.jumlahItem; i++) {
@@ -304,7 +302,6 @@ void Save(const char *filename, GameState *gameState) {
 
     fprintf(file, "%d\n", gameState->userCount);
 
-    // Tulis users
     for (int i = 0; i < gameState->userCount; i++) {
         fprintf(file, "%d %s %s\n",
             gameState->users[i].money,
@@ -361,6 +358,7 @@ void makeListItem(GameState *gameState) {
     }
 }
 
+/* buat ngetes hasil load-an tadi*/
 // void testGameState(GameState *gameState) {
 //     printf("\n=== Testing Game State ===\n");
     
