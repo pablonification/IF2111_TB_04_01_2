@@ -16,6 +16,7 @@ void evaluateGuess(const char *target, Word guess, char *result);
 
 boolean isValidGuess(Word guess);
 
+void INITIALIZED_WORDL3(char ***wordsList, int *wordCount);
 
 boolean compareWords(const char *word1, const char *word2);
 

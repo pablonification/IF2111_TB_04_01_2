@@ -17,10 +17,11 @@ CURRENT CONDITION : START DULU BARU LOAD
 
 */
 
-int isLoggedIn = 0;
+boolean isLoggedIn = FALSE;
 char currentUser[MAX_LEN];
 boolean isConfigLoaded = FALSE;
 boolean isGameStarted = FALSE;
+boolean isStarted = FALSE;
 
 // Fungsi
 int main(){
@@ -50,63 +51,93 @@ void showMainMenu(){
 
      while (1) {
         printf(">> ");
-        scanf("%s", command);
+        STARTLINE();
+		Word command = currentWord;
+        char filename[MAX_LEN];
 
-        if (customStringCMP(command, "START") == 0) {
-            if (isGameStarted) {
-                printf("Game sudah dijalankan sebelumnya.\n");
-                continue;
-            }
-            if (Start("savefile.txt")) {
-                isGameStarted = TRUE;
-                gameState.isInitialized = TRUE;
-                printf("PURRMART berhasil dijalankan.\n");
+
+		if (IsKataEqual(command, makeWord("START", 5))){
+            Start("savefile.txt");
+        } 
+        else if (IsKataEqual(command, makeWord("LOAD", 4))){
+            Load(filename, &gameState);
+        } 
+        else if (IsKataEqual(command, makeWord("HELP", 5))){
+            if (!isStarted){
+                printf("START -> Untuk masuk sesi baru\n");
+                printf("LOAD -> Untuk memulai sesi berdasarkan file konfigurasi\n");
+                printf("QUIT -> Untuk keluar dari program\n");
+            } else {
+                if (!isLoggedIn){
+                printf("=====[ Login Menu Help PURRMART]=====\n");
+                printf("REGISTER -> Untuk melakukan pendaftaran akun baru\n");
+                printf("LOGIN -> Untuk masuk ke dalam akun dan memulai sesi\n");
+                printf("QUIT -> Untuk keluar dari program\n");   
+                } else {
+                    printf("=====[ Menu Help PURRMART]=====\n");
+                    printf("WORK -> Untuk bekerja\n");
+                    printf("WORK CHALLENGE -> Untuk mengerjakan challenge\n");
+                    printf("STORE LIST -> Untuk melihat barang-barang di toko\n");
+                    printf("STORE REQUEST -> Untuk meminta penambahan barang\n");
+                    printf("STORE SUPPLY -> Untuk menambahkan barang dari permintaan\n");
+                    printf("STORE REMOVE -> Untuk menghapus barang\n");
+                    printf("LOGOUT -> Untuk keluar dari sesi\n");
+                    printf("SAVE -> Untuk menyimpan state ke dalam file");
+                    printf("QUIT -> Untuk keluar dari program\n");
+                }
             }
         }
-        else if (customStringCMP(command, "LOAD") == 0) {
-            if (!isGameStarted) {
-                printf("Anda harus START terlebih dahulu.\n");
-                continue;
-            }
-            
-            char filename[MAX_LEN];
-            scanf("%s", filename);
-            Load(filename, &gameState); 
-            if (gameState.isInitialized) {
-                isConfigLoaded = TRUE;
-            }
-        }
-        else if (customStringCMP(command, "LOGIN") == 0) {
-            if (!isConfigLoaded) {
-                printf("Anda harus LOAD file konfigurasi terlebih dahulu.\n");
-                continue;
-            }
+		else if (IsKataEqual(command, makeWord("LOGIN", 5))){
             Login(gameState.users, gameState.userCount);
         }
-        else if (customStringCMP(command, "REGISTER") == 0) {
-            if (!isConfigLoaded) {
-                printf("Anda harus LOAD file konfigurasi terlebih dahulu.\n");
-                continue;
-            }
+        else if (IsKataEqual(command, makeWord("LOGOUT", 5))){
+            
+        }
+		else if (IsKataEqual(command, makeWord("REGISTER", 8))){
             Register(&gameState);
         }
-        else if (customStringCMP(command, "SAVE") == 0) {
-            char filename[MAX_LEN];
-            printf("Masukkan nama file untuk menyimpan: ");
-            scanf("%s", filename);
-            Save(filename, &gameState);
+		else if (IsKataEqual(command, makeWord("WORK", 5))){
+            Work(gameState.users->money); 
         }
-        else if (customStringCMP(command, "HELP") == 0) {
-            printf("Commands: START, LOAD <filename>, SAVE <filename> LOGIN, REGISTER, HELP, QUIT\n");
+ 		else if (IsKataEqual(command, makeWord("WORK CHALLANGE", 14))){
+            printf("Daftar challenge yang tersedia:\n");
+            printf("1. Tebak Angka (biaya main=200)\n");
+            printf("2. W0RDL399 (biaya main=500)\n");
+            printf("3. QUANTUM W0RDL399 (biaya main=1000)\n");
+
+            printf("Masukan challenge yang hendak dimainkan: ");
+            STARTLINE();
+            Word choice = currentWord;
+
+            if (isKataEqual(choice, makeWord("1", 1))){
+                tebakAngkaRNG();
+            }
+            else if (isKataEqual(choice, makeWord("2", 1))){
+                playWordl3();
+            }
+            else if (isKataEqual(choice, makeWord("3", 1))){
+                playQuantumWordl3();
+            }
         }
-        else if (customStringCMP(command, "QUIT") == 0) {
-            printf("Goodbye!\n");
-            break;
-        } 
-        else {
-            printf("Unknown command. Type HELP for a list of commands.\n");
+		else if (IsKataEqual(command, makeWord("STORE LIST", 10))){
+
         }
-    }
+		else if (IsKataEqual(command, makeWord("STORE REQUEST", 5))){
+
+        }
+		else if (IsKataEqual(command, makeWord("STORE SUPPLY", 12))){
+
+        }
+		else if (IsKataEqual(command, makeWord("STORE REMOVE", 12))){
+
+        }
+		else if (IsKataEqual(command, makeWord("SAVE", 5))){
+            Save(filename,&gameState);
+        }
+        else if (IsKataEqual(command, makeWord("QUIT", 5))){
+
+        }
+     }
 }
 
 boolean Start(const char *filename) {
@@ -118,6 +149,7 @@ boolean Start(const char *filename) {
     if (file != NULL) {
         printf("Save file ditemukan dan dibaca.\n");
         fclose(file);
+        isStarted = TRUE;
         return TRUE;
     } else {
         printf("Save file tidak ditemukan. PURRMART gagal dijalankan.\n");
@@ -339,14 +371,16 @@ int customStringCMP(const char *str1, const char *str2){
     return str1[i] - str2[i];
 }
 
-void customStringCPY(char *dest, const char *src){
-    int i = 0;
-    while(src[i] != '\0'){
-        dest[i] = src[i];
-        i++;
+Word makeWord(char* str, int length) {
+    Word W;
+    int i;
+    for (i = 0; i < length; i++) {
+        W.TabWord[i] = str[i];
     }
-    dest[i] = '\0';
+    W.Length = length;
+    return W;
 }
+
 
 
 void insertLastItem(ListItem *itemlist, Barang item){
