@@ -13,8 +13,8 @@
 #define InvalidIdx -1  /* Indeks tak terdefinisi */
 
 /* Definisi elemen dan koleksi objek */
-#define IdxType int
-#define ElType int
+typedef int IdxType;  
+typedef int ElType;   
 
 typedef struct {
 	ElType A[MaxEl];  /* Memori tempat penyimpanan elemen (container) */
