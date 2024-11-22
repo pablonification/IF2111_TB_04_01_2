@@ -1,0 +1,1 @@
+gcc -o main main.c src/ADT/queue.c src/ADT/list.c src/ADT/mesinkarakter.c src/misc.c src/ADT/mesinkata.c

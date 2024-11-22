@@ -1,6 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "main.h"
+#include "src/misc.h"
+// #include "src/qwordl3.h"
+// #include "src/wordl32.h"
+// #include "src/work/work.h"
+// #include "src/rng.h"
+// #include "src/bonus2.h"
+// #include "src/command/store.h"
+// #include "src/command/user.h"
+
+
+/*
+harusnya LOAD dulu baru START
+CURRENT CONDITION : START DULU BARU LOAD
+
+*/
 
 int isLoggedIn = 0;
 char currentUser[MAX_LEN];

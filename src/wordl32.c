@@ -4,6 +4,7 @@
 #include "ADT/boolean.h"
 #include "ADT/mesinkarakter.h"
 #include "ADT/mesinkata.h"
+#include "wordl32.h"
 
 #define WORD_LENGTH 5
 #define MAX_ATTEMPTS 5
@@ -108,12 +109,13 @@ void playWordl3() {
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             printf("%s\n", board[i]);
         }
-
+    printf("ANSWER>>>>>>>>>>%s\n", answer);
         // Prompt the user for input
         printf("Masukkan kata tebakan Anda: ");
         do {
             STARTLINE();
             guess = currentWord;
+
 
             if (guess.Length != WORD_LENGTH) {
                 printf("Invalid input! Please enter a %d-letter word: ", WORD_LENGTH);
@@ -150,3 +152,8 @@ void playWordl3() {
 }
 
 
+int main(){
+
+    playWordl3();
+    return 0;
+}

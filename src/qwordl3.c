@@ -126,6 +126,10 @@ void playQuantumWordl3() {
             }
         }
 
+        for (int i = 0; i <= 3; i++){
+            printf("ANSWERS>>>>>>%s\n", answers[i]);
+        }
+
         // Prompt the user for guesses
         for (int w = 0; w < TOTAL_WORDS; w++) {
             printf("Masukkan kata tebakan Anda untuk Word %d: ", w + 1);
@@ -183,4 +187,7 @@ void playQuantumWordl3() {
     free(wordsList);
 }
 
-
+int main(){
+    playQuantumWordl3();
+    return 0;
+}

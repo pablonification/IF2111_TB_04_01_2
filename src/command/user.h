@@ -23,7 +23,7 @@ typedef struct{
 
 typedef struct {
     Barang item[MaxEl];
-    int jumlahItem;
+    int itemLength;
 } ListItem;
 
 typedef struct {
