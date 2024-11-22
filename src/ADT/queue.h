@@ -17,6 +17,12 @@ typedef struct {
 	int idxTail;
 } Queue;
 
+typedef struct {
+    char item_name[CAPACITY][100];
+    int idxHead;
+    int idxTail;
+} QueueItem;
+
 
 /* ********* AKSES (Selektor) ********* */
 /* Jika q adalah Queue, maka akses elemen : */
@@ -65,5 +71,10 @@ typedef struct {
     /* Contoh : jika ada tiga elemen bernilai 1, 20, 30 akan dicetak: [1,20,30] */
     /* Jika Queue kosong : menulis [] */
 
+    void CreateQueueItem(QueueItem *q);
+    boolean isEmptyItem(QueueItem q);
+    int lengthQueueItem(QueueItem q);
+    void enqueueItem(QueueItem *q, char *item_name);
+    void dequeueItem(QueueItem *q, char *item_name);
 
 #endif
