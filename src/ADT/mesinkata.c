@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "mesinkata.h"
 #include "mesinkarakter.h"
 #include "boolean.h"
@@ -249,4 +250,14 @@ void LoadWordsFromFile(const char *fileName, char ***wordsList, int *wordCount) 
     }
 
     fclose(file);
+}
+
+Word makeWord(char* str, int length) {
+    Word W;
+    int i;
+    for (i = 0; i < length; i++) {
+        W.TabWord[i] = str[i];
+    }
+    W.Length = length;
+    return W;
 }

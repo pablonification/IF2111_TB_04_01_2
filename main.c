@@ -2,13 +2,7 @@
 #include <stdlib.h>
 #include "main.h"
 #include "src/misc.h"
-// #include "src/qwordl3.h"
-// #include "src/wordl32.h"
-// #include "src/work/work.h"
-// #include "src/rng.h"
-// #include "src/bonus2.h"
-// #include "src/command/store.h"
-// #include "src/command/user.h"
+
 
 
 /*
@@ -29,7 +23,7 @@ int main(){
     return 0;
 }
 void showMainMenu(){
-    char command[MAX_LEN];
+    
     static GameState gameState = {0};
     gameState.isInitialized = FALSE; 
 
@@ -49,20 +43,22 @@ void showMainMenu(){
 
     printf("Selamat datang di PURRMART!\nTolong masukkan command yang valid (START, LOAD <filename>, REGISTER, LOGIN, HELP, atau QUIT.)\n");
 
-     while (1) {
+    while (1) {
         printf(">> ");
-        STARTLINE();
-		Word command = currentWord;
-        char filename[MAX_LEN];
+		Word command;
+        scanWord(&command);
 
-
-		if (IsKataEqual(command, makeWord("START", 5))){
+		if (compareWords("START", command)){
             Start("savefile.txt");
         } 
-        else if (IsKataEqual(command, makeWord("LOAD", 4))){
-            Load(filename, &gameState);
+        else if (compareWords("LOAD", command)){
+            Word filename;
+            scanWord(&filename);
+            char file[50];
+            wordToString(filename, file);
+            Load(file, &gameState);
         } 
-        else if (IsKataEqual(command, makeWord("HELP", 5))){
+        else if (compareWords("HELP", command)){
             if (!isStarted){
                 printf("START -> Untuk masuk sesi baru\n");
                 printf("LOAD -> Untuk memulai sesi berdasarkan file konfigurasi\n");
@@ -87,19 +83,19 @@ void showMainMenu(){
                 }
             }
         }
-		else if (IsKataEqual(command, makeWord("LOGIN", 5))){
+		else if (compareWords("LOGIN", command)){
             Login(gameState.users, gameState.userCount);
         }
-        else if (IsKataEqual(command, makeWord("LOGOUT", 5))){
+        else if (compareWords("LOGOUT", command)){
             
         }
-		else if (IsKataEqual(command, makeWord("REGISTER", 8))){
+		else if (compareWords("REGISTER", command)){
             Register(&gameState);
         }
-		else if (IsKataEqual(command, makeWord("WORK", 5))){
-            Work(gameState.users->money); 
+		else if (compareWords("WORK", command)){
+            //Work(gameState.users.money); 
         }
- 		else if (IsKataEqual(command, makeWord("WORK CHALLANGE", 14))){
+ 		else if (compareWords("WORK CHALLANGE", command)){
             printf("Daftar challenge yang tersedia:\n");
             printf("1. Tebak Angka (biaya main=200)\n");
             printf("2. W0RDL399 (biaya main=500)\n");
@@ -109,32 +105,32 @@ void showMainMenu(){
             STARTLINE();
             Word choice = currentWord;
 
-            if (isKataEqual(choice, makeWord("1", 1))){
+            if (compareWords("1", choice)){
                 tebakAngkaRNG();
             }
-            else if (isKataEqual(choice, makeWord("2", 1))){
+            else if (compareWords("2", choice)){
                 playWordl3();
             }
-            else if (isKataEqual(choice, makeWord("3", 1))){
+            else if (compareWords("3", choice)){
                 playQuantumWordl3();
             }
         }
-		else if (IsKataEqual(command, makeWord("STORE LIST", 10))){
+		else if (compareWords("STORE LIST", command)){
 
         }
-		else if (IsKataEqual(command, makeWord("STORE REQUEST", 5))){
+		else if (compareWords("STORE REQUEST", command)){
 
         }
-		else if (IsKataEqual(command, makeWord("STORE SUPPLY", 12))){
+		else if (compareWords("STORE SUPPLY", command)){
 
         }
-		else if (IsKataEqual(command, makeWord("STORE REMOVE", 12))){
+		else if (compareWords("STORE REMOVE", command)){
 
         }
-		else if (IsKataEqual(command, makeWord("SAVE", 5))){
-            Save(filename,&gameState);
+		else if (compareWords("SAVE", command)){
+            //Save(filename,&gameState);
         }
-        else if (IsKataEqual(command, makeWord("QUIT", 5))){
+        else if (compareWords("QUIT", command)){
 
         }
      }
@@ -371,17 +367,14 @@ int customStringCMP(const char *str1, const char *str2){
     return str1[i] - str2[i];
 }
 
-Word makeWord(char* str, int length) {
-    Word W;
-    int i;
-    for (i = 0; i < length; i++) {
-        W.TabWord[i] = str[i];
+void customStringCPY(char *dest, const char *src){
+    int i = 0;
+    while(src[i] != '\0'){
+        dest[i] = src[i];
+        i++;
     }
-    W.Length = length;
-    return W;
+    dest[i] = '\0';
 }
-
-
 
 void insertLastItem(ListItem *itemlist, Barang item){
     if (itemlist->jumlahItem < MaxEl) {

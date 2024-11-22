@@ -66,7 +66,7 @@ char translateCodon(char *codon) {
     return '?'; // invalid codon
 }
 
-int main() {
+/*int main() {
     Word DNA;
     Word RNA;
     char protein[1000];
@@ -130,4 +130,4 @@ int main() {
     }
 
     return 0;
-}
+}*/

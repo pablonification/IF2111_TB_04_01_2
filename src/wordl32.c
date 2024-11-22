@@ -143,9 +143,3 @@ void playWordl3() {
     free(wordsList);
 }
 
-
-int main(){
-
-    playWordl3();
-    return 0;
-}

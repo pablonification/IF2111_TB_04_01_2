@@ -251,3 +251,4 @@ void LoadWordsFromFile(const char *fileName, char ***wordsList, int *wordCount) 
     fclose(file);
 }
 
+

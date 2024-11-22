@@ -45,7 +45,7 @@ void tebakAngkaRNG() {
     printf("Kesempatan habis! Angka yang benar adalah %d.\n", answer);
 }
 
-int main(){
+/*int main(){
     tebakAngkaRNG();
     return 0;
-}
+}*/
