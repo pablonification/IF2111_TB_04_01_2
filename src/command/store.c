@@ -1,10 +1,16 @@
+/*
+isEmpty harus buat lagi
+
+terus fungsi aymar juga ada yg harus dibuat lagi insertLast
+*/
+
 #include <stdio.h>
 #include "store.h"
 #include "../ADT/mesinkata.h"
 #include "../ADT/mesinkarakter.h"
 
-void storeList (ListBarang L, Queue Q) {
-   
+void storeList (ListItem L, Queue Q) {
+    // List L;
     printf(" _____ _____ ___________ _____ _     _____ _____ _____ \n");
     printf("/  ___|_   _|  _  | ___ \\  ___| |   |_   _/  ___|_   _|\n");
     printf("\\ `--.  | | | | | | |_/ / |__ | |     | | '\\ `--.  | | \n");
@@ -19,7 +25,7 @@ void storeList (ListBarang L, Queue Q) {
         printf("TOKO KOSONG");
     }
     else { 
-        for (int i  = 0; i < Length(L); i ++) {
+        for (int i  = 0; i < L.itemLength; i ++) {
             printf("- ");
             printf("%s", L.item[i]);
         }
@@ -30,7 +36,7 @@ void storeList (ListBarang L, Queue Q) {
 }
   // int itemCount = sizeof(itemList) / sizeof(itemList[0]);
   
-void storeRequest (ListBarang *L, Queue *Q) {
+void storeRequest (ListItem *L, Queue *Q) {
     char req;
     char val;
     boolean found = 0;
@@ -39,7 +45,7 @@ void storeRequest (ListBarang *L, Queue *Q) {
     scanWord(&req);
     printf("\n");
 
-    for (int i = 0; i < Length(*L); i++) {
+    for (int i = 0; i < L->itemLength; i++) {
         if (isEmpty(*Q) && Search(*L,req)) {
             printf("Barang dengan nama yang sama sudah ada di toko\n");
         }
@@ -68,7 +74,7 @@ void storeRequest (ListBarang *L, Queue *Q) {
     }
 }
 
-void storeRemove(ListBarang L) {
+void storeRemove(ListItem L) {
     char item_name[100];
     printf("Nama barang yang akan dihapus: ");
     scanWord(&item_name);
@@ -104,10 +110,11 @@ void storeSupply(List *L, Queue *Q) { //asumsi L adalah list ber-Eltype Barang. 
     scanWord(&response);
 
     if (mystrcmp(response, "Terima") == 0) {
-        int price;
+        Word price;
         printf("Harga barang: ");
         scanWord(&price); // ini harusnya scanInt tapi belum ada hehe
-        Barang new_item = {item_name, price};
+        convertWordToInt(price);
+        Item new_item = {item_name, price};
 
         InsertLast(L, new_item);
         printf("%s dengan harga %d telah ditambahkan ke toko.\n", item_name, price);
