@@ -35,7 +35,6 @@ typedef struct {
     boolean isStateLoaded;
 } GameState;
 
-
 int isLoggedIn = 0;
 char currentUser[MAX_LEN];
 boolean isConfigLoaded = FALSE;

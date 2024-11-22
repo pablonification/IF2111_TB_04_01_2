@@ -39,7 +39,6 @@ void Login(User *users, int user_count) {
 
 void Register(GameState *gameState) {
     char username[MAX_LEN], password[MAX_LEN];
-    
     printf("Username: ");
     scanf("%s", username);
     
