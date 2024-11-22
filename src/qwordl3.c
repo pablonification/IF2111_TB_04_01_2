@@ -183,7 +183,4 @@ void playQuantumWordl3() {
     free(wordsList);
 }
 
-int main() {
-    playQuantumWordl3();
-    return 0;
-}
+

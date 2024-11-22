@@ -150,7 +150,3 @@ void playWordl3() {
 }
 
 
-int main() {
-    playWordl3();
-    return 0;
-}
