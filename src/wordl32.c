@@ -59,28 +59,20 @@ boolean compareWords(const char *target, Word guess) {
     return isKataEqual(targetWord, guess);
 }
 
+void INITIALIZED_WORDL3(char ***wordsList, int *wordCount) {
+    LoadWordsFromFile("words.txt", wordsList, wordCount);
+
+    // Debug output to confirm successful loading
+    printf("Loaded %d words.\n", *wordCount);
+    for (int i = 0; i < *wordCount; i++) {
+        printf("Word %d: %s\n", i + 1, (*wordsList)[i]);
+    }
+}
+
 void playWordl3() {
-    char **wordsList = calloc(100, sizeof(char *));
-    int wordCount = 0;
-    char buffer[6];
-    FILE *wordsFile = fopen("words.txt", "r");
-
-    if (!wordsFile) {
-        printf("Error: Unable to open words file.\n");
-        free(wordsList);
-        exit(1);
-    }
-
-    // Load words into wordsList
-    while (fscanf(wordsFile, "%5s", buffer) != EOF) {
-        wordsList[wordCount] = malloc(6 * sizeof(char));
-        for (int i = 0; i < WORD_LENGTH; i++) {
-            wordsList[wordCount][i] = buffer[i];
-        }
-        wordsList[wordCount][WORD_LENGTH] = '\0'; 
-        wordCount++;
-    }
-    fclose(wordsFile);
+    char **wordsList;
+    int wordCount;
+    INITIALIZED_WORDL3(&wordsList, &wordCount);
 
     // Pick a random answer
     srand(time(NULL));
@@ -151,9 +143,3 @@ void playWordl3() {
     free(wordsList);
 }
 
-
-int main(){
-
-    playWordl3();
-    return 0;
-}

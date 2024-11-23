@@ -9,9 +9,9 @@
 #define MAX_ATTEMPTSQ 9
 #define TOTAL_WORDS 4
 
-char board[MAX_ATTEMPTSQ][WORD_LENGTH * 3 + 1];
+char boardq[MAX_ATTEMPTSQ][WORD_LENGTH * 3 + 1];
 
-void evaluateGuess(const char *target, Word guess, char *result) {
+void evaluateGuessq(const char *target, Word guess, char *result) {
     int matched[WORD_LENGTH] = {0}; 
     int used[WORD_LENGTH] = {0};    
 
@@ -45,11 +45,11 @@ void evaluateGuess(const char *target, Word guess, char *result) {
 }
 
 
-boolean isValidGuess(Word guess) {
+boolean isValidGuessq(Word guess) {
     return (guess.Length == WORD_LENGTH);
 }
 
-boolean compareWords(const char *word1, const char *word2) {
+boolean compareWordss(const char *word1, const char *word2) {
     for (int i = 0; i < WORD_LENGTH; i++) {
         if (word1[i] != word2[i]) {
             return FALSE; // Words are not equal
@@ -58,28 +58,21 @@ boolean compareWords(const char *word1, const char *word2) {
     return TRUE; // Words are equal
 }
 
+void INITIALIZED_QWORDL3(char ***wordsList, int *wordCount) {
+    LoadWordsFromFile("words.txt", wordsList, wordCount);
+
+    // Debug output to confirm successful loading
+    printf("Loaded %d words.\n", *wordCount);
+    for (int i = 0; i < *wordCount; i++) {
+        printf("Word %d: %s\n", i + 1, (*wordsList)[i]);
+    }
+}
+
 void playQuantumWordl3() {
-    char **wordsList = calloc(100, sizeof(char *));
-    int wordCount = 0;
-    char buffer[6];
-    FILE *wordsFile = fopen("words.txt", "r");
+    char **wordsList;
+    int wordCount;
+    INITIALIZED_QWORDL3(&wordsList, &wordCount);
 
-    if (!wordsFile) {
-        printf("Error: Unable to open words file.\n");
-        free(wordsList);
-        exit(1);
-    }
-
-    // Load words into wordsList
-    while (fscanf(wordsFile, "%5s", buffer) != EOF) {
-        wordsList[wordCount] = malloc(6 * sizeof(char));
-        for (int i = 0; i < WORD_LENGTH; i++) {
-            wordsList[wordCount][i] = buffer[i];
-        }
-        wordsList[wordCount][WORD_LENGTH] = '\0'; 
-        wordCount++;
-    }
-    fclose(wordsFile);
 
     // Pick four unique target words
     srand(time(NULL));
@@ -90,7 +83,7 @@ void playQuantumWordl3() {
             isUnique = TRUE;
             answers[i] = wordsList[rand() % wordCount];
             for (int j = 0; j < i; j++) {
-                if (compareWords(answers[i], answers[j])) {
+                if (compareWordss(answers[i], answers[j])) {
                     isUnique = FALSE;
                     break;
                 }
@@ -99,15 +92,15 @@ void playQuantumWordl3() {
     }
 
     // Initialize game board
-    char board[TOTAL_WORDS][MAX_ATTEMPTSQ][WORD_LENGTH * 3 + 1];
+    char boardq[TOTAL_WORDS][MAX_ATTEMPTSQ][WORD_LENGTH * 3 + 1];
     for (int w = 0; w < TOTAL_WORDS; w++) {
         for (int i = 0; i < MAX_ATTEMPTSQ; i++) {
             for (int j = 0; j < WORD_LENGTH * 3; j += 3) {
-                board[w][i][j] = '_';
-                board[w][i][j + 1] = ' ';
-                board[w][i][j + 2] = ' ';
+                boardq[w][i][j] = '_';
+                boardq[w][i][j + 1] = ' ';
+                boardq[w][i][j + 2] = ' ';
             }
-            board[w][i][WORD_LENGTH * 3] = '\0'; // Null-terminate each row
+            boardq[w][i][WORD_LENGTH * 3] = '\0'; // Null-terminate each row
         }
     }
 
@@ -122,7 +115,7 @@ void playQuantumWordl3() {
         for (int w = 0; w < TOTAL_WORDS; w++) {
             printf("Word %d:\n", w + 1);
             for (int i = 0; i < MAX_ATTEMPTSQ; i++) {
-                printf("%s\n", board[w][i]);
+                printf("%s\n", boardq[w][i]);
             }
         }
 
@@ -147,13 +140,13 @@ void playQuantumWordl3() {
         boolean allCorrect = TRUE;
         for (int w = 0; w < TOTAL_WORDS; w++) {
             char result[WORD_LENGTH * 3 + 1] = {0}; // Clear the result buffer
-            evaluateGuess(answers[w], guesses[w], result);
+            evaluateGuessq(answers[w], guesses[w], result);
             for (int i = 0; i < WORD_LENGTH * 3 + 1; i++) {
-                board[w][attempts][i] = result[i];
+                boardq[w][attempts][i] = result[i];
             }
 
             // Check if the word is correctly guessed
-            if (!compareWords(answers[w], guesses[w].TabWord)) {
+            if (!compareWordss(answers[w], guesses[w].TabWord)) {
                 allCorrect = FALSE;
             }
         }
@@ -170,7 +163,7 @@ void playQuantumWordl3() {
     for (int w = 0; w < TOTAL_WORDS; w++) {
         printf("Word %d:\n", w + 1);
         for (int i = 0; i < MAX_ATTEMPTSQ; i++) {
-            printf("%s\n", board[w][i]);
+            printf("%s\n", boardq[w][i]);
         }
     }
 
@@ -187,7 +180,3 @@ void playQuantumWordl3() {
     free(wordsList);
 }
 
-int main(){
-    playQuantumWordl3();
-    return 0;
-}

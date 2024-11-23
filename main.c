@@ -2,13 +2,7 @@
 #include <stdlib.h>
 #include "main.h"
 #include "src/misc.h"
-// #include "src/qwordl3.h"
-// #include "src/wordl32.h"
-// #include "src/work/work.h"
-// #include "src/rng.h"
-// #include "src/bonus2.h"
-// #include "src/command/store.h"
-// #include "src/command/user.h"
+
 
 
 /*
@@ -17,10 +11,11 @@ CURRENT CONDITION : START DULU BARU LOAD
 
 */
 
-int isLoggedIn = 0;
+boolean isLoggedIn = FALSE;
 char currentUser[MAX_LEN];
 boolean isConfigLoaded = FALSE;
 boolean isGameStarted = FALSE;
+boolean isStarted = FALSE;
 
 // Fungsi
 int main(){
@@ -28,7 +23,7 @@ int main(){
     return 0;
 }
 void showMainMenu(){
-    char command[MAX_LEN];
+    
     static GameState gameState = {0};
     gameState.isInitialized = FALSE; 
 
@@ -48,65 +43,97 @@ void showMainMenu(){
 
     printf("Selamat datang di PURRMART!\nTolong masukkan command yang valid (START, LOAD <filename>, REGISTER, LOGIN, HELP, atau QUIT.)\n");
 
-     while (1) {
+    while (1) {
         printf(">> ");
-        scanf("%s", command);
+		Word command;
+        scanWord(&command);
 
-        if (customStringCMP(command, "START") == 0) {
-            if (isGameStarted) {
-                printf("Game sudah dijalankan sebelumnya.\n");
-                continue;
-            }
-            if (Start("savefile.txt")) {
-                isGameStarted = TRUE;
-                gameState.isInitialized = TRUE;
-                printf("PURRMART berhasil dijalankan.\n");
+		if (compareWords("START", command)){
+            Start("savefile.txt");
+        } 
+        else if (compareWords("LOAD", command)){
+            Word filename;
+            scanWord(&filename);
+            char file[50];
+            wordToString(filename, file);
+            Load(file, &gameState);
+        } 
+        else if (compareWords("HELP", command)){
+            if (!isStarted){
+                printf("START -> Untuk masuk sesi baru\n");
+                printf("LOAD -> Untuk memulai sesi berdasarkan file konfigurasi\n");
+                printf("QUIT -> Untuk keluar dari program\n");
+            } else {
+                if (!isLoggedIn){
+                printf("=====[ Login Menu Help PURRMART]=====\n");
+                printf("REGISTER -> Untuk melakukan pendaftaran akun baru\n");
+                printf("LOGIN -> Untuk masuk ke dalam akun dan memulai sesi\n");
+                printf("QUIT -> Untuk keluar dari program\n");   
+                } else {
+                    printf("=====[ Menu Help PURRMART]=====\n");
+                    printf("WORK -> Untuk bekerja\n");
+                    printf("WORK CHALLENGE -> Untuk mengerjakan challenge\n");
+                    printf("STORE LIST -> Untuk melihat barang-barang di toko\n");
+                    printf("STORE REQUEST -> Untuk meminta penambahan barang\n");
+                    printf("STORE SUPPLY -> Untuk menambahkan barang dari permintaan\n");
+                    printf("STORE REMOVE -> Untuk menghapus barang\n");
+                    printf("LOGOUT -> Untuk keluar dari sesi\n");
+                    printf("SAVE -> Untuk menyimpan state ke dalam file");
+                    printf("QUIT -> Untuk keluar dari program\n");
+                }
             }
         }
-        else if (customStringCMP(command, "LOAD") == 0) {
-            if (!isGameStarted) {
-                printf("Anda harus START terlebih dahulu.\n");
-                continue;
-            }
-            
-            char filename[MAX_LEN];
-            scanf("%s", filename);
-            Load(filename, &gameState); 
-            if (gameState.isInitialized) {
-                isConfigLoaded = TRUE;
-            }
-        }
-        else if (customStringCMP(command, "LOGIN") == 0) {
-            if (!isConfigLoaded) {
-                printf("Anda harus LOAD file konfigurasi terlebih dahulu.\n");
-                continue;
-            }
+		else if (compareWords("LOGIN", command)){
             Login(gameState.users, gameState.userCount);
         }
-        else if (customStringCMP(command, "REGISTER") == 0) {
-            if (!isConfigLoaded) {
-                printf("Anda harus LOAD file konfigurasi terlebih dahulu.\n");
-                continue;
-            }
+        else if (compareWords("LOGOUT", command)){
+            
+        }
+		else if (compareWords("REGISTER", command)){
             Register(&gameState);
         }
-        else if (customStringCMP(command, "SAVE") == 0) {
-            char filename[MAX_LEN];
-            printf("Masukkan nama file untuk menyimpan: ");
-            scanf("%s", filename);
-            Save(filename, &gameState);
+		else if (compareWords("WORK", command)){
+            //Work(gameState.users.money); 
         }
-        else if (customStringCMP(command, "HELP") == 0) {
-            printf("Commands: START, LOAD <filename>, SAVE <filename> LOGIN, REGISTER, HELP, QUIT\n");
+ 		else if (compareWords("WORK CHALLANGE", command)){
+            printf("Daftar challenge yang tersedia:\n");
+            printf("1. Tebak Angka (biaya main=200)\n");
+            printf("2. W0RDL399 (biaya main=500)\n");
+            printf("3. QUANTUM W0RDL399 (biaya main=1000)\n");
+
+            printf("Masukan challenge yang hendak dimainkan: ");
+            STARTLINE();
+            Word choice = currentWord;
+
+            if (compareWords("1", choice)){
+                tebakAngkaRNG();
+            }
+            else if (compareWords("2", choice)){
+                playWordl3();
+            }
+            else if (compareWords("3", choice)){
+                playQuantumWordl3();
+            }
         }
-        else if (customStringCMP(command, "QUIT") == 0) {
-            printf("Goodbye!\n");
-            break;
-        } 
-        else {
-            printf("Unknown command. Type HELP for a list of commands.\n");
+		else if (compareWords("STORE LIST", command)){
+
         }
-    }
+		else if (compareWords("STORE REQUEST", command)){
+
+        }
+		else if (compareWords("STORE SUPPLY", command)){
+
+        }
+		else if (compareWords("STORE REMOVE", command)){
+
+        }
+		else if (compareWords("SAVE", command)){
+            //Save(filename,&gameState);
+        }
+        else if (compareWords("QUIT", command)){
+
+        }
+     }
 }
 
 boolean Start(const char *filename) {
@@ -118,6 +145,7 @@ boolean Start(const char *filename) {
     if (file != NULL) {
         printf("Save file ditemukan dan dibaca.\n");
         fclose(file);
+        isStarted = TRUE;
         return TRUE;
     } else {
         printf("Save file tidak ditemukan. PURRMART gagal dijalankan.\n");
@@ -347,7 +375,6 @@ void customStringCPY(char *dest, const char *src){
     }
     dest[i] = '\0';
 }
-
 
 void insertLastItem(ListItem *itemlist, Barang item){
     if (itemlist->jumlahItem < MaxEl) {

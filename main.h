@@ -3,6 +3,11 @@
 #include "src/ADT/list.h"
 #include "src/ADT/mesinkarakter.h"
 #include "src/misc.h"
+#include "src/wordl32.h"
+#include "src/rng.h"
+#include "src/bonus2.h"
+#include "src/qwordl3.h"
+#include "src/work/work.h"
 
 #define MAX_LEN 50
 #define MAX_USERS 100
@@ -47,4 +52,5 @@ int customStringCMP(const char *str1, const char *str2);
 void customStringCPY(char *dest, const char *src);
 void insertLastItem(ListItem *itemlist, Barang item);
 void makeListItem(GameState *gameState);
+
 // void testGameState(GameState *gameState);

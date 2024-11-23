@@ -46,6 +46,8 @@ boolean compareWords(const char *target, Word guess);
  * - Mengembalikan FALSE jika berbeda.
  */
 
+void INITIALIZED_WORDL3(char ***wordsList, int *wordCount);
+
 void playWordl3();
 /* Fungsi utama untuk memainkan permainan Wordl3.
  *

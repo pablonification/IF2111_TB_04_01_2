@@ -214,3 +214,41 @@ int WordToInt(Word W)
         res = res*10 + (W.TabWord[i] - '0');
     } return res;
 }
+
+void LoadWordsFromFile(const char *fileName, char ***wordsList, int *wordCount) {
+    // For wordle work challange
+    FILE *file = fopen(fileName, "r");
+    if (!file) {
+        printf("Error: Unable to open file %s.\n", fileName);
+        exit(1);
+    }
+
+    *wordsList = calloc(100, sizeof(char *));
+    if (*wordsList == NULL) {
+        printf("Error: Memory allocation failed.\n");
+        fclose(file);
+        exit(1);
+    }
+
+    char buffer[6];
+    *wordCount = 0;
+
+    while (fscanf(file, "%5s", buffer) != EOF) {
+        (*wordsList)[*wordCount] = malloc(6 * sizeof(char));
+        if ((*wordsList)[*wordCount] == NULL) {
+            printf("Error: Memory allocation failed for word %d.\n", *wordCount);
+            fclose(file);
+            exit(1);
+        }
+
+        for (int i = 0; i < 5; i++) {
+            (*wordsList)[*wordCount][i] = buffer[i];
+        }
+        (*wordsList)[*wordCount][5] = '\0'; 
+        (*wordCount)++;
+    }
+
+    fclose(file);
+}
+
+

@@ -9,15 +9,16 @@
 #define MAX_ATTEMPTSQ 9
 #define TOTAL_WORDS 4
 
-extern char board[MAX_ATTEMPTSQ][WORD_LENGTH * 3 + 1];
+extern char boardq[MAX_ATTEMPTSQ][WORD_LENGTH * 3 + 1];
 
 
-void evaluateGuess(const char *target, Word guess, char *result);
+void evaluateGuessq(const char *target, Word guess, char *result);
 
-boolean isValidGuess(Word guess);
+boolean isValidGuessq(Word guess);
 
+void INITIALIZED_QWORDL3(char ***wordsList, int *wordCount);
 
-boolean compareWords(const char *word1, const char *word2);
+boolean compareWordss(const char *word1, const char *word2);
 
 void playQuantumWordl3();
 

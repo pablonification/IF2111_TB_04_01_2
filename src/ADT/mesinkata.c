@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "mesinkata.h"
 #include "mesinkarakter.h"
 #include "boolean.h"
@@ -213,4 +214,50 @@ int WordToInt(Word W)
     for (i=0; i<W.Length; i++) {
         res = res*10 + (W.TabWord[i] - '0');
     } return res;
+}
+
+void LoadWordsFromFile(const char *fileName, char ***wordsList, int *wordCount) {
+    // For wordle work challange
+    FILE *file = fopen(fileName, "r");
+    if (!file) {
+        printf("Error: Unable to open file %s.\n", fileName);
+        exit(1);
+    }
+
+    *wordsList = calloc(100, sizeof(char *));
+    if (*wordsList == NULL) {
+        printf("Error: Memory allocation failed.\n");
+        fclose(file);
+        exit(1);
+    }
+
+    char buffer[6];
+    *wordCount = 0;
+
+    while (fscanf(file, "%5s", buffer) != EOF) {
+        (*wordsList)[*wordCount] = malloc(6 * sizeof(char));
+        if ((*wordsList)[*wordCount] == NULL) {
+            printf("Error: Memory allocation failed for word %d.\n", *wordCount);
+            fclose(file);
+            exit(1);
+        }
+
+        for (int i = 0; i < 5; i++) {
+            (*wordsList)[*wordCount][i] = buffer[i];
+        }
+        (*wordsList)[*wordCount][5] = '\0'; 
+        (*wordCount)++;
+    }
+
+    fclose(file);
+}
+
+Word makeWord(char* str, int length) {
+    Word W;
+    int i;
+    for (i = 0; i < length; i++) {
+        W.TabWord[i] = str[i];
+    }
+    W.Length = length;
+    return W;
 }

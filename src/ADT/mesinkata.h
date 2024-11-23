@@ -96,4 +96,9 @@ void displayWord(Word W, boolean newLine);
 
 int WordToInt(Word W);
 /* Mengembalikan nilai integer dari Word W */
+
+Word makeWord(char* str, int length);
+
+void LoadWordsFromFile(const char *fileName, char ***wordsList, int *wordCount);
+
 #endif
