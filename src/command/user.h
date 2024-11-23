@@ -19,10 +19,10 @@ typedef struct{
 typedef struct{
     char name[MAX_LEN];
     int price;
-} Barang;
+} Item;
 
 typedef struct {
-    Barang item[MaxEl];
+    Item item[MaxEl];
     int itemLength;
 } ListItem;
 

@@ -24,11 +24,11 @@ typedef struct{
 typedef struct{
     char name[MAX_LEN];
     int price;
-} Barang;
+} Item;
 
 typedef struct {
-    Barang item[MaxEl];
-    int jumlahItem;
+    Item item[MaxEl];
+    int itemLength;
 } ListItem;
 
 typedef struct {
@@ -50,7 +50,7 @@ void Register(GameState *gameState);
 void Save(const char *filename, GameState *gameState);
 int customStringCMP(const char *str1, const char *str2);
 void customStringCPY(char *dest, const char *src);
-void insertLastItem(ListItem *itemlist, Barang item);
+void insertLastItem(ListItem *itemlist, Item item);
 void makeListItem(GameState *gameState);
 
 // void testGameState(GameState *gameState);

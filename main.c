@@ -219,7 +219,7 @@ boolean loadGameState(GameState *gameState, const char *filename) {
         
         gameState->itemList.item[i].price = price;
         customStringCPY(gameState->itemList.item[i].name, name);
-        gameState->itemList.jumlahItem++;
+        gameState->itemList.itemLength++;
     }
 
     int userCount;
@@ -335,9 +335,9 @@ void Save(const char *filename, GameState *gameState) {
         return;
     }
 
-    fprintf(file, "%d\n", gameState->itemList.jumlahItem);
+    fprintf(file, "%d\n", gameState->itemList.itemLength);
 
-    for (int i = 0; i < gameState->itemList.jumlahItem; i++) {
+    for (int i = 0; i < gameState->itemList.itemLength; i++) {
         fprintf(file, "%d %s\n", 
             gameState->itemList.item[i].price,
             gameState->itemList.item[i].name);
@@ -376,17 +376,16 @@ void customStringCPY(char *dest, const char *src){
     dest[i] = '\0';
 }
 
-void insertLastItem(ListItem *itemlist, Barang item){
-    if (itemlist->jumlahItem < MaxEl) {
-        itemlist->item[itemlist->jumlahItem] = item;
-        itemlist->jumlahItem++;
+void insertLastItem(ListItem *itemlist, Item item){
+    if (itemlist->itemLength < MaxEl) {
+        itemlist->item[itemlist->itemLength] = item;
+        itemlist->itemLength++;
     } else {
         printf("Item sudah penuh. Tidak bisa menambahkan item %s\n", item.name);
     }
 }
 
 void makeListItem(GameState *gameState) {
-    gameState->itemList.jumlahItem = 0;  
     for (int i = 0; i < MaxEl; i++) {
         gameState->itemList.item[i].price = 0;
         gameState->itemList.item[i].name[0] = '\0';
@@ -404,11 +403,9 @@ void makeListItem(GameState *gameState) {
 // void testGameState(GameState *gameState) {
 //     printf("\n=== Testing Game State ===\n");
     
-//     printf("\nDaftar Item (%d item):\n", gameState->itemList.jumlahItem);
 //     if (gameState->itemList.jumlahItem == 0) {
 //         printf("Tidak ada item.\n");
 //     } else {
-//         for (int i = 0; i < gameState->itemList.jumlahItem; i++) {
 //             printf("%d. %s (Harga: %d)\n", 
 //                    i + 1, 
 //                    gameState->itemList.item[i].name, 
