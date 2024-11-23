@@ -84,39 +84,55 @@ void showMainMenu(){
             }
         }
 		else if (compareWords("LOGIN", command, 5)){
-            Login(gameState.users, gameState.userCount);
+            if (!isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program");
+            } else {
+                Login(gameState.users, gameState.userCount);
+            }
         }
         else if (compareWords("LOGOUT", command, 6)){
             
         }
 		else if (compareWords("REGISTER", command, 7)){
-            Register(&gameState);
+            if (!isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program");
+            } else {
+                Register(&gameState);
+            } 
         }
 		else if (compareWords("WORK", command, 4)){
             //Work(gameState.users.money); 
         }
  		else if (compareWords("WORK CHALLANGE", command, 14)){
-            printf("Daftar challenge yang tersedia:\n");
-            printf("1. Tebak Angka (biaya main=200)\n");
-            printf("2. W0RDL399 (biaya main=500)\n");
-            printf("3. QUANTUM W0RDL399 (biaya main=1000)\n");
+            if (!isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program");
+            } else {
+                if (!isLoggedIn){
+                printf("Lakukan login atau register terlebih dahulu");
+                } else {
+                    printf("Daftar challenge yang tersedia:\n");
+                    printf("1. Tebak Angka (biaya main=200)\n");
+                    printf("2. W0RDL399 (biaya main=500)\n");
+                    printf("3. QUANTUM W0RDL399 (biaya main=1000)\n");
 
-            printf("Masukan challenge yang hendak dimainkan: ");
-            STARTLINE();
-            Word choice = currentWord;
+                    printf("Masukan challenge yang hendak dimainkan: ");
+                    Word choice;
+                    scanWord(&choice);
 
-            if (compareWords("1", choice, 1)){
-                tebakAngkaRNG();
-            }
-            else if (compareWords("2", choice, 1)){
-                playWordl3();
-            }
-            else if (compareWords("3", choice, 1)){
-                playQuantumWordl3();
+                    if (compareWords("1", choice, 1)){
+                        tebakAngkaRNG();
+                    }
+                    else if (compareWords("2", choice, 1)){
+                        playWordl3();
+                    }
+                    else if (compareWords("3", choice, 1)){
+                        playQuantumWordl3();
+                    }
+                }
             }
         }
 		else if (compareWords("STORE LIST", command, 10)){
-
+            
         }
 		else if (compareWords("STORE REQUEST", command, 13)){
 
