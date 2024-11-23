@@ -49,10 +49,10 @@ boolean isValidGuess(Word guess) {
     return (guess.Length == WORD_LENGTH);
 }
 
-boolean compareWords(const char *target, Word guess) {
+boolean compareWords(const char *target, Word guess, int LENGTH) {
     Word targetWord;
-    targetWord.Length = WORD_LENGTH;
-    for (int i = 0; i < WORD_LENGTH; i++) {
+    targetWord.Length = LENGTH;
+    for (int i = 0; i < LENGTH; i++) {
         targetWord.TabWord[i] = target[i];
     }
 
@@ -61,12 +61,6 @@ boolean compareWords(const char *target, Word guess) {
 
 void INITIALIZED_WORDL3(char ***wordsList, int *wordCount) {
     LoadWordsFromFile("words.txt", wordsList, wordCount);
-
-    // Debug output to confirm successful loading
-    printf("Loaded %d words.\n", *wordCount);
-    for (int i = 0; i < *wordCount; i++) {
-        printf("Word %d: %s\n", i + 1, (*wordsList)[i]);
-    }
 }
 
 void playWordl3() {
@@ -122,7 +116,7 @@ void playWordl3() {
         }
 
         // Check for win condition
-        if (compareWords(answer, guess)) {
+        if (compareWords(answer, guess, WORD_LENGTH)) {
             win = TRUE;
         }
         attempts++;

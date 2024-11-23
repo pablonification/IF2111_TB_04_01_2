@@ -60,12 +60,6 @@ boolean compareWordss(const char *word1, const char *word2) {
 
 void INITIALIZED_QWORDL3(char ***wordsList, int *wordCount) {
     LoadWordsFromFile("words.txt", wordsList, wordCount);
-
-    // Debug output to confirm successful loading
-    printf("Loaded %d words.\n", *wordCount);
-    for (int i = 0; i < *wordCount; i++) {
-        printf("Word %d: %s\n", i + 1, (*wordsList)[i]);
-    }
 }
 
 void playQuantumWordl3() {

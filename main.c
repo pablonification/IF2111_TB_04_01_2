@@ -48,17 +48,17 @@ void showMainMenu(){
 		Word command;
         scanWord(&command);
 
-		if (compareWords("START", command)){
+		if (compareWords("START", command, 5)){
             Start("savefile.txt");
         } 
-        else if (compareWords("LOAD", command)){
+        else if (compareWords("LOAD", command, 4)){
             Word filename;
             scanWord(&filename);
             char file[50];
             wordToString(filename, file);
             Load(file, &gameState);
         } 
-        else if (compareWords("HELP", command)){
+        else if (compareWords("HELP", command, 4)){
             if (!isStarted){
                 printf("START -> Untuk masuk sesi baru\n");
                 printf("LOAD -> Untuk memulai sesi berdasarkan file konfigurasi\n");
@@ -83,19 +83,19 @@ void showMainMenu(){
                 }
             }
         }
-		else if (compareWords("LOGIN", command)){
+		else if (compareWords("LOGIN", command, 5)){
             Login(gameState.users, gameState.userCount);
         }
-        else if (compareWords("LOGOUT", command)){
+        else if (compareWords("LOGOUT", command, 6)){
             
         }
-		else if (compareWords("REGISTER", command)){
+		else if (compareWords("REGISTER", command, 7)){
             Register(&gameState);
         }
-		else if (compareWords("WORK", command)){
+		else if (compareWords("WORK", command, 4)){
             //Work(gameState.users.money); 
         }
- 		else if (compareWords("WORK CHALLANGE", command)){
+ 		else if (compareWords("WORK CHALLANGE", command, 14)){
             printf("Daftar challenge yang tersedia:\n");
             printf("1. Tebak Angka (biaya main=200)\n");
             printf("2. W0RDL399 (biaya main=500)\n");
@@ -105,32 +105,32 @@ void showMainMenu(){
             STARTLINE();
             Word choice = currentWord;
 
-            if (compareWords("1", choice)){
+            if (compareWords("1", choice, 1)){
                 tebakAngkaRNG();
             }
-            else if (compareWords("2", choice)){
+            else if (compareWords("2", choice, 1)){
                 playWordl3();
             }
-            else if (compareWords("3", choice)){
+            else if (compareWords("3", choice, 1)){
                 playQuantumWordl3();
             }
         }
-		else if (compareWords("STORE LIST", command)){
+		else if (compareWords("STORE LIST", command, 10)){
 
         }
-		else if (compareWords("STORE REQUEST", command)){
+		else if (compareWords("STORE REQUEST", command, 13)){
 
         }
-		else if (compareWords("STORE SUPPLY", command)){
+		else if (compareWords("STORE SUPPLY", command, 12)){
 
         }
-		else if (compareWords("STORE REMOVE", command)){
+		else if (compareWords("STORE REMOVE", command, 12)){
 
         }
-		else if (compareWords("SAVE", command)){
+		else if (compareWords("SAVE", command, 4)){
             //Save(filename,&gameState);
         }
-        else if (compareWords("QUIT", command)){
+        else if (compareWords("QUIT", command, 4)){
 
         }
      }

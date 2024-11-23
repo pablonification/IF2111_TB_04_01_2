@@ -35,7 +35,7 @@ boolean isValidGuess(Word guess);
  * - Mengembalikan FALSE jika tidak.
  */
 
-boolean compareWords(const char *target, Word guess);
+boolean compareWords(const char *target, Word guess, int LENGTH);
 /* Membandingkan kata target dan tebakan pengguna untuk kesamaan.
  * I.S.:
  * - `target` adalah string null-terminated dengan panjang WORD_LENGTH.
