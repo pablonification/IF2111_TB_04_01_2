@@ -18,17 +18,15 @@ void storeList (ListItem *L) {
     printf(" `--. \\ | | | | | |    /|  __|| |     | |  `--. \\ | |  \n");
     printf("/\\_/ / | | \\ \\_/ / |\\ \\| |___| |_____| |_/\\__/ / | |  \n");
     printf("\\____/  \\_/  \\___/\\_| \\_\\____/\\_____/\\___/\\____/  \\_/\n");
-
-
-    printf("List barang yang ada di toko: \n");
     
     if (IsEmptyItem(L)) {
-        printf("TOKO KOSONG");
+        printf("TOKO KOSONG\n");
     }
     else { 
+        printf("List barang yang ada di toko: \n");
         for (int i  = 0; i < L->itemLength; i ++) {
-            printf("- ");
-            printf("%s", L->item[i]);
+            printf("");
+            printf("%d. %s\n", i + 1, L->item[i].name);
         }
     // }   
     printf("\n");
@@ -46,7 +44,6 @@ void storeRequest (ListItem *L, QueueItem *Q) {
     printf("Nama barang yang diminta: ");
     scanWord(&req);
     wordToString(req, &reqstr);
-    printf("\n");
 
     for (int i = 0; i < L->itemLength; i++) {
         if (isEmptyItem(*Q) && SearchItem(*L,reqstr)) {
@@ -81,15 +78,15 @@ void storeRemove(ListItem *L) {
     Word item_name;
     printf("Nama barang yang akan dihapus: ");
     scanWord(&item_name);
-    char item_namestr;
-    wordToString(item_name, &item_namestr);
+    char item_namestr[50];
+    wordToString(item_name, item_namestr);
 
     
     boolean found = 0;
     int i = 0;
 
-    while (!IsEmptyItem(L) && !found) {
-        if (customStringCMP(&item_namestr, (*L).item[i].name) == 0) {
+    while (i < L->itemLength && !found) {
+        if (customStringCMP(item_namestr, (*L).item[i].name) == 0) {
             found = 1;
         }
         i++;
@@ -97,17 +94,17 @@ void storeRemove(ListItem *L) {
 
     if (found) {
         DeleteAtItem(L, i-1);
-        printf("%s telah berhasil dihapus.\n", item_name);
+        printf("%s telah berhasil dihapus.\n", item_namestr);
     }
     else {
-        printf("Toko tidak menjual %s.", item_name);
+        printf("Toko tidak menjual %s.\n", item_namestr);
     }
 }
 
 void storeSupply(ListItem *L, QueueItem *Q) { 
     char item_name[50];
     dequeueItem(Q, item_name);
-    printf("Apakah kamu ingin menambahkan barang %s ke toko? (Terima/Tunda/Tolak: ", item_name);
+    printf("Apakah kamu ingin menambahkan barang %s ke toko? (Terima/Tunda/Tolak): ", item_name);
 
     Word response;
     scanWord(&response);
@@ -122,6 +119,7 @@ void storeSupply(ListItem *L, QueueItem *Q) {
         else {
             printf("Input tidak valid. Silakan coba lagi: ");
             scanWord(&response);
+            wordToString(response, &responsestr);
         }
     }
 
@@ -129,13 +127,13 @@ void storeSupply(ListItem *L, QueueItem *Q) {
         Word price;
         printf("Harga barang: ");
         scanWord(&price);
-        convertWordToInt(price);
+        int priceint = convertWordToInt(price);
         Item new_item;
         customStringCPY(new_item.name, item_name);
-        new_item.price = convertWordToInt(price);
+        new_item.price = priceint;
 
         insertLastItem(L, new_item);
-        printf("%s dengan harga %d telah ditambahkan ke toko.\n", item_name, convertWordToInt(price));
+        printf("%s dengan harga %d telah ditambahkan ke toko.\n", item_name, priceint);
     }
     else if (customStringCMP(&responsestr, "Tunda") == 0) {
         enqueueItem(Q, item_name);
@@ -152,10 +150,11 @@ boolean IsEmptyItem(ListItem *L) {
 
 void DeleteAtItem(ListItem *L, IdxType i) {
 	int j = LastIdxItem(*L);
-	while (i <= j) {
+	while (i < j) {
 		(*L).item[i] = (*L).item[i+1];
         i++;
 	}
+    (*L).itemLength -= 1;
 }
 
 IdxType LastIdxItem(ListItem L) {
@@ -180,18 +179,26 @@ boolean SearchItem(ListItem L, char X) {
 }
 
 int main() {
-    ListItem itemList[] = {
-    {"AK47", 20},
-    {"Lalabu", 20},
-    {"Ayam Goreng Crisbar", 10}
+    ListItem itemList = {
+        .item = {
+        {"AK47", 20},
+        {"Lalabu", 20},
+        {"Ayam Goreng Crisbar", 10},
+        {"Kunjaw UAS Alstrukdat", 50}
+        },
+        .itemLength = 4
     };
 
     QueueItem requestQueue;
     CreateQueueItem(&requestQueue);
 
-    storeList(itemList);
-    storeRequest(itemList, &requestQueue);
-    storeRemove(itemList);
-    storeSupply(itemList, &requestQueue);
+    storeList(&itemList);
+    storeRequest(&itemList, &requestQueue);
+    storeRequest(&itemList, &requestQueue);
+    storeSupply(&itemList, &requestQueue);
+    storeSupply(&itemList, &requestQueue);
+    storeSupply(&itemList, &requestQueue);
+    storeRemove(&itemList);
+    storeList(&itemList);
     return 0;
 }

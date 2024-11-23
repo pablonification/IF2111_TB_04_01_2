@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "queue.h"
 #include "boolean.h"
+#include "../../main.h"
 
 /* *** Kreator *** */
 void CreateQueue(Queue *q)
@@ -124,8 +125,8 @@ void dequeueItem(QueueItem *q, char *item_name)
 /* I.S. q tidak mungkin kosong */
 /* F.S. val = nilai elemen HEAD pd I.S., IDX_HEAD "mundur";
         q mungkin kosong */
-{
-    item_name = (q)->item_name[(q)->idxHead];
+{   
+    customStringCPY(item_name, (q)->item_name[(q)->idxHead]);
     if (lengthQueueItem(*q) == 1) {
         CreateQueueItem(q);
     } else {
