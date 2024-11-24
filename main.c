@@ -22,10 +22,12 @@ int main(){
     showMainMenu();
     return 0;
 }
-void showMainMenu(){
-    
+void showMainMenu(){   
     static GameState gameState = {0};
     gameState.isInitialized = FALSE; 
+    gameState.isStateLoaded = FALSE;
+    makeListItem(&gameState);
+    char filepath[MAX_LEN] = "data/savefile.txt";
 
     printf("                                                                                           \n"
         "                                                                                           \n"
@@ -46,17 +48,21 @@ void showMainMenu(){
     while (1) {
         printf(">> ");
 		Word command;
-        scanWord(&command);
+        STARTLINE();
+        command = currentWord;
 
 		if (compareWords("START", command, 5)){
-            Start("savefile.txt");
+            Start("savefile.txt", isConfigLoaded, &isGameStarted);
         } 
         else if (compareWords("LOAD", command, 4)){
+            printf("Masukkan nama file yang akan diload: ");
+            
             Word filename;
-            scanWord(&filename);
+            STARTLINE();
+            filename = currentWord;
+            
             char file[50];
-            wordToString(filename, file);
-            Load(file, &gameState);
+            Load(filepath, &gameState);
         } 
         else if (compareWords("HELP", command, 4)){
             if (!isStarted){
@@ -85,7 +91,7 @@ void showMainMenu(){
         }
 		else if (compareWords("LOGIN", command, 5)){
             if (!isStarted){
-                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program");
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
             } else {
                 Login(gameState.users, gameState.userCount);
             }
@@ -101,7 +107,7 @@ void showMainMenu(){
             } 
         }
 		else if (compareWords("WORK", command, 4)){
-            //Work(gameState.users.money); 
+            // work(&gameState.users->money); 
         }
  		else if (compareWords("WORK CHALLANGE", command, 14)){
             if (!isStarted){
@@ -117,7 +123,8 @@ void showMainMenu(){
 
                     printf("Masukan challenge yang hendak dimainkan: ");
                     Word choice;
-                    scanWord(&choice);
+                    STARTLINE();
+                    choice = currentWord;
 
                     if (compareWords("1", choice, 1)){
                         tebakAngkaRNG();
@@ -132,136 +139,92 @@ void showMainMenu(){
             }
         }
 		else if (compareWords("STORE LIST", command, 10)){
-            
+            // storeList(&gameState.itemList);
         }
 		else if (compareWords("STORE REQUEST", command, 13)){
 
         }
 		else if (compareWords("STORE SUPPLY", command, 12)){
-
+            
         }
 		else if (compareWords("STORE REMOVE", command, 12)){
-
+            // storeRemove(&gameState.itemList);
         }
 		else if (compareWords("SAVE", command, 4)){
             //Save(filename,&gameState);
         }
         else if (compareWords("QUIT", command, 4)){
-
+            break;
+        }
+        else {
+            printf("Command tidak valid. Silakan coba command yang valid.\n");
         }
      }
 }
 
-boolean Start(const char *filename) {
-    char filepath[100];
-    customStringCPY(filepath, "data/");
-    stringConcat(filepath, filename);
-    
-    FILE *file = fopen(filepath, "r");
-    if (file != NULL) {
-        printf("Save file ditemukan dan dibaca.\n");
-        fclose(file);
-        isStarted = TRUE;
-        return TRUE;
+boolean Start(const char *filename, boolean isConfigLoaded, boolean *isGameStarted) {
+    *isGameStarted = TRUE;
+    if (!isConfigLoaded) {
+        printf("Anda harus load file konfigurasi terlebih dahulu.\n");
+        return FALSE;
+    }
+    else {
+            printf("Game berhasil dimulai. Selamat bermain!\n");
+            return TRUE;
+        }
+}
+
+
+void Load(char *fileName, GameState *gameState) {
+    STARTWORDFILE(fileName);
+
+    if (isKataInt(currentWord)) {
+        gameState->itemList.itemLength = WordToInt(currentWord);
     } else {
-        printf("Save file tidak ditemukan. PURRMART gagal dijalankan.\n");
-        return FALSE;
-    }
-}
-
-
-void Load(const char *filename, GameState *gameState) {
-    if (filename == NULL || *filename == '\0') {
-        printf("Nama file tidak valid.\n");
+        printf("Error: Invalid number of items in configuration file.\n");
         return;
     }
 
-    char filepath[100];
-    customStringCPY(filepath, "data/");
-    stringConcat(filepath, filename);
-    
-    FILE *file = fopen(filepath, "r");
-    if (file == NULL) {
-        printf("Save file tidak ditemukan. PURRMART gagal dijalankan.\n");
-        return;
-    }
-
-    fseek(file, 0, SEEK_END);
-    long size = ftell(file);
-    rewind(file);
-    
-    if (size == 0) {
-        printf("File kosong\n");
-        fclose(file);
-        return;
-    }
-
-    if (!loadGameState(gameState, filename)) {
-        printf("Kesalahan dalam memuat file konfigurasi. PURRMART gagal dijalankan.\n");
-        fclose(file);
-        return;
-    }
-    
-    fclose(file);
-    // testGameState(gameState);
-    printf("File konfigurasi berhasil diload. PURRMART siap digunakan.\n");
-}
-
-
-boolean loadGameState(GameState *gameState, const char *filename) {
-    char filepath[100];
-    customStringCPY(filepath, "data/");
-    stringConcat(filepath, filename);
-    
-    FILE *file = fopen(filepath, "r");
-    if (file == NULL) return FALSE;
-
-    makeListItem(gameState);
-
-    int itemCount;
-    if (fscanf(file, "%d", &itemCount) != 1) {
-        fclose(file);
-        return FALSE;
-    }
-
-    for (int i = 0; i < itemCount; i++) {
-        int price;
-        char name[MAX_LEN];
-        
-        if (fscanf(file, "%d %[^\n]", &price, name) != 2) {
-            fclose(file);
-            return FALSE;
+    for (int i = 0; i < gameState->itemList.itemLength; i++) {
+        ADVWORDFILE();
+        if (!isKataInt(currentWord)) {
+            printf("Error: Invalid price for item %d.\n", i + 1);
+            return;
         }
-        
-        gameState->itemList.item[i].price = price;
-        customStringCPY(gameState->itemList.item[i].name, name);
-        gameState->itemList.itemLength++;
+        gameState->itemList.item[i].price = WordToInt(currentWord);
+
+        ADVWORDFILE();
+        wordToString(currentWord, gameState->itemList.item[i].name);
     }
 
-    int userCount;
-    if (fscanf(file, "%d", &userCount) != 1) {
-        fclose(file);
-        return FALSE;
+    ADVWORDFILE();
+    if (isKataInt(currentWord)) {
+        gameState->userCount = WordToInt(currentWord);
+    } else {
+        printf("Error: Invalid number of users in configuration file.\n");
+        return;
     }
 
-    for (int i = 0; i < userCount; i++) {
-        int money;
-        char username[MAX_LEN], password[MAX_LEN];
-        
-        if (fscanf(file, "%d %s %s", &money, username, password) != 3) {
-            fclose(file);
-            return FALSE;
+    for (int i = 0; i < gameState->userCount; i++) {
+        ADVWORDFILE(); 
+        if (!isKataInt(currentWord)) {
+            printf("Error: Invalid money value for user %d.\n", i + 1);
+            return;
         }
-        
-        gameState->users[i].money = money;
-        customStringCPY(gameState->users[i].name, username);
-        customStringCPY(gameState->users[i].password, password);
-        gameState->userCount++;
+        gameState->users[i].money = WordToInt(currentWord);
+
+        ADVWORDFILE();
+        wordToString(currentWord, gameState->users[i].name);
+
+        ADVWORDFILE();
+        wordToString(currentWord, gameState->users[i].password);
     }
+
 
     gameState->isInitialized = TRUE;
-    fclose(file);
-    return TRUE;
+    gameState->isStateLoaded = TRUE;
+
+    printf("Load berhasil dijalankan.\n");
 }
 
 int findUser(User *users, int user_count, const char *username, const char *password) {
@@ -280,15 +243,17 @@ void Login(User *users, int user_count) {
         return;
     }
 
-    char username[MAX_LEN];
-    char password[MAX_LEN];
+    Word username,password;
     
     printf("Username: ");
-    scanf("%s", username);
-    printf("Password: ");
-    scanf("%s", password);
+    STARTLINE();
+    username = currentWord;
 
-    int userIndex = findUser(users, user_count, username, password);
+    printf("Password: ");
+    STARTLINE();
+    password = currentWord;
+
+    int userIndex = findUser(users, user_count, username.TabWord, password.TabWord);
     
     if(userIndex != -1) {
         customStringCPY(currentUser, users[userIndex].name);
@@ -301,28 +266,30 @@ void Login(User *users, int user_count) {
 }
 
 void Register(GameState *gameState) {
-    char username[MAX_LEN], password[MAX_LEN];
+    Word username, password;
     
     printf("Username: ");
-    scanf("%s", username);
+    STARTLINE();
+    username = currentWord;
     
     for (int i = 0; i < gameState->userCount; i++) {
-        if (customStringCMP(gameState->users[i].name, username) == 0) {
+        if (compareWords(gameState->users->name,username,username.Length) == 0) {
             printf("Username %s sudah terdaftar. Silakan gunakan username lain.\n", username);
             return;
         }
     }
     
     printf("Password: ");
-    scanf("%s", password);
+    STARTLINE();
+    password = currentWord;
 
     if (gameState->userCount >= MAX_USERS) {
         printf("Maksimum jumlah pengguna telah tercapai.\n");
         return;
     }
 
-    customStringCPY(gameState->users[gameState->userCount].name, username);
-    customStringCPY(gameState->users[gameState->userCount].password, password);
+    customStringCPY(gameState->users[gameState->userCount].name, username.TabWord);
+    customStringCPY(gameState->users[gameState->userCount].password, password.TabWord);
     gameState->users[gameState->userCount].money = 0;
     gameState->userCount++;
 

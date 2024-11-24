@@ -38,7 +38,7 @@ void STARTWORD() {
     // ALGORITMA
     ResetCurrentWord();
     START();
-    IgnoreBlanks();
+    // IgnoreBlanks();
     if (currentChar == MARK) EndWord = TRUE;
     else {
         EndWord = FALSE;

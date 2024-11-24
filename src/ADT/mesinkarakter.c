@@ -80,3 +80,4 @@ void ADV() {
     retval = fscanf(pita, "%c", &currentChar);
     EOP = (currentChar == MARK);
 }
+
