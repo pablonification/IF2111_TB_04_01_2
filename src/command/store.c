@@ -173,28 +173,28 @@ boolean SearchItem(ListItem L, char *X) {
     return found;
 }
 
-// int main() {
-//     ListItem itemList = {
-//         .item = {
-//         {"AK47", 20},
-//         {"Lalabu", 20},
-//         {"Ayam Goreng Crisbar", 10},
-//         {"Kunjaw UAS Alstrukdat", 50}
-//         },
-//         .itemLength = 4
-//     };
+int main() {
+    ListItem itemList = {
+        .item = {
+        {"AK47", 20},
+        {"Lalabu", 20},
+        {"Ayam Goreng Crisbar", 10},
+        {"Kunjaw UAS Alstrukdat", 50}
+        },
+        .itemLength = 4
+    };
 
-//     QueueItem requestQueue;
-//     CreateQueueItem(&requestQueue);
+    QueueItem requestQueue;
+    CreateQueueItem(&requestQueue);
 
-//     storeList(&itemList);
-//     storeRequest(&itemList, &requestQueue);
-//     storeRequest(&itemList, &requestQueue);
-//     storeRequest(&itemList, &requestQueue);
-//     storeSupply(&itemList, &requestQueue);
-//     storeSupply(&itemList, &requestQueue);
-//     storeSupply(&itemList, &requestQueue);
-//     storeRemove(&itemList);
-//     storeList(&itemList);
-//     return 0;
-// }
+    storeList(&itemList);
+    storeRequest(&itemList, &requestQueue);
+    storeRequest(&itemList, &requestQueue);
+    storeRequest(&itemList, &requestQueue);
+    storeSupply(&itemList, &requestQueue);
+    storeSupply(&itemList, &requestQueue);
+    storeSupply(&itemList, &requestQueue);
+    storeRemove(&itemList);
+    storeList(&itemList);
+    return 0;
+}

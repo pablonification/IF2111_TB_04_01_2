@@ -9,10 +9,6 @@
 #include "../ADT/mesinkarakter.h"
 #include "../../main.h"
 
-// typedef struct {
-//     int price;
-//     char name[100];
-// } List;
 void storeList (ListItem *L);
 // I.S List bisa saja kosong
 // F.S Jika list kosong, mencetak "TOKO KOSONG"
