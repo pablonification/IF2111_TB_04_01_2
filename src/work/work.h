@@ -1,5 +1,5 @@
 #ifndef __work__
-#define __work__
+#define ____
 
 #include "../ADT/mesinkata.h"
 #include "../ADT/boolean.h"

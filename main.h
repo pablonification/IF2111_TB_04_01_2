@@ -7,7 +7,6 @@
 #include "src/rng.h"
 #include "src/bonus2.h"
 #include "src/qwordl3.h"
-#include "src/work/work.h"
 
 #define MAX_LEN 50
 #define MAX_USERS 100
@@ -41,13 +40,14 @@ typedef struct {
 } GameState;
 
 void showMainMenu();
-boolean Start(const char *filename);
-void Load(const char *filename, GameState *gameState);
+boolean Start(const char *filename, boolean isConfigLoaded, boolean *isGameStarted);
+void Load(char *filename, GameState *gameState);
 boolean loadGameState(GameState *gameState, const char *filename);
 void Login(User *users, int user_count);
 int findUser(User *users, int user_count, const char *username, const char *password);
 void Register(GameState *gameState);
 void Save(const char *filename, GameState *gameState);
+void Logout(User *users, int user_count);
 int customStringCMP(const char *str1, const char *str2);
 void customStringCPY(char *dest, const char *src);
 void insertLastItem(ListItem *itemlist, Item item);
