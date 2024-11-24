@@ -30,6 +30,6 @@ void DeleteAtItem(ListItem *L, IdxType i);
 
 IdxType LastIdxItem(ListItem L);
 
-boolean SearchItem(ListItem L, char X);
+boolean SearchItem(ListItem L, char *X);
 
 #endif

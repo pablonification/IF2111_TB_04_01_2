@@ -11,14 +11,6 @@ terus fungsi aymar juga ada yg harus dibuat lagi insertLast
 #include "../ADT/mesinkarakter.h"
 
 void storeList (ListItem *L) {
-    // List L;
-    printf(" _____ _____ ___________ _____ _     _____ _____ _____ \n");
-    printf("/  ___|_   _|  _  | ___ \\  ___| |   |_   _/  ___|_   _|\n");
-    printf("\\ `--.  | | | | | | |_/ / |__ | |     | | '\\ `--.  | | \n");
-    printf(" `--. \\ | | | | | |    /|  __|| |     | |  `--. \\ | |  \n");
-    printf("/\\_/ / | | \\ \\_/ / |\\ \\| |___| |_____| |_/\\__/ / | |  \n");
-    printf("\\____/  \\_/  \\___/\\_| \\_\\____/\\_____/\\___/\\____/  \\_/\n");
-    
     if (IsEmptyItem(L)) {
         printf("TOKO KOSONG\n");
     }
@@ -35,41 +27,38 @@ void storeList (ListItem *L) {
 }
   // int itemCount = sizeof(itemList) / sizeof(itemList[0]);
   
-void storeRequest (ListItem *L, QueueItem *Q) {
+void storeRequest(ListItem *L, QueueItem *Q) {
     Word req;
-    char val;
-    boolean found = 0;
-    char reqstr;
+    char reqstr[MaxEl]; // Ensure sufficient size
+    boolean found = FALSE;
 
     printf("Nama barang yang diminta: ");
-    scanWord(&req);
-    wordToString(req, &reqstr);
+    STARTLINE();
+    req = currentWord;
+    wordToString(req, reqstr); // Convert Word to string
 
-    for (int i = 0; i < L->itemLength; i++) {
-        if (isEmptyItem(*Q) && SearchItem(*L,reqstr)) {
-            printf("Barang dengan nama yang sama sudah ada di toko\n");
-        }
-        else if (isEmptyItem(*Q) && !SearchItem(*L,reqstr)) {
-            enqueueItem(Q, &reqstr);
-        }
-        else if (!isEmptyItem(*Q) && !SearchItem(*L,reqstr)) {
-            for (int i = 0; i < lengthQueueItem(*Q); i++) { // gmn kalo pake for sepanjang length queue biar ga ngubah urutan antrian
-                dequeueItem(Q, &reqstr);           // jadi semuanya kedequeue enqueue
-                if (val == reqstr) {
-                    enqueueItem(Q, &reqstr);
-                    found = 1;
-                }
-                else {
-                    enqueueItem(Q, &reqstr);
-                }   
-            }
+    boolean isFoundInList = SearchItem(*L, reqstr);
+    if (isFoundInList) {
+        printf("Barang dengan nama yang sama sudah ada di toko\n");
+    } else if (isEmptyItem(*Q)) {
+        enqueueItem(Q, reqstr);
+    } else {
+        boolean foundInQueue = FALSE;
+        int queueLength = lengthQueueItem(*Q);
 
-            if (found) {
-                printf("Barang dengan nama yang sama sudah ada di antrian\n");
+        for (int i = 0; i < queueLength; i++) {
+            char temp[MaxEl];
+            dequeueItem(Q, temp); // Dequeue an item to temp
+            if (customStringCMP(temp, reqstr) == 0) {
+                foundInQueue = TRUE;
             }
-            else {
-                enqueueItem(Q, &reqstr);
-            }
+            enqueueItem(Q, temp); // Re-enqueue the item
+        }
+
+        if (foundInQueue) {
+            printf("Barang dengan nama yang sama sudah ada di antrian\n");
+        } else {
+            enqueueItem(Q, reqstr);
         }
     }
 }
@@ -109,8 +98,9 @@ void storeSupply(ListItem *L, QueueItem *Q) {
     printf("Apakah kamu ingin menambahkan barang %s ke toko? (Terima/Tunda/Tolak): ", item_name);
 
     Word response;
-    scanWord(&response);
+    STARTLINE();
     char responsestr;
+    response = currentWord;
     wordToString(response, &responsestr);
     boolean inputValid = FALSE;
 
@@ -138,8 +128,8 @@ void storeSupply(ListItem *L, QueueItem *Q) {
         printf("%s dengan harga %d telah ditambahkan ke toko.\n", item_name, priceint);
     }
     else if (customStringCMP(&responsestr, "Tunda") == 0) {
-        enqueueItem(Q, item_name);
         printf("%s dikembalikan ke antrian.\n", item_name);
+        enqueueItem(Q, item_name);
     }
     else if (customStringCMP(&responsestr, "Tolak") == 0) {
         printf("%s dihapus dari antrian.\n", item_name);
@@ -167,13 +157,16 @@ IdxType LastIdxItem(ListItem L) {
 	return i;
 }
 
-boolean SearchItem(ListItem L, char X) {
+boolean SearchItem(ListItem L, char *X) {
 	int i = 0;
-	int j = LastIdxItem(L);
+    
+	int j = L.itemLength;
+    printf("%d\n", j);
 	boolean found = FALSE;
-	while ((i <= j) && !found) {
-		if (customStringCMP(L.item[i].name, &X) == 0) {
+	while ((i < L.itemLength) && !found) {
+		if (customStringCMP(L.item[i].name, X) == 0) {
 			found = TRUE;
+            // i++;
 		}
 		i += 1;
 	}
@@ -197,9 +190,10 @@ int main() {
     storeList(&itemList);
     storeRequest(&itemList, &requestQueue);
     storeRequest(&itemList, &requestQueue);
+    storeRequest(&itemList, &requestQueue);
     storeSupply(&itemList, &requestQueue);
-    //storeSupply(&itemList, &requestQueue);
-    //storeSupply(&itemList, &requestQueue);
+    storeSupply(&itemList, &requestQueue);
+    storeSupply(&itemList, &requestQueue);
     storeRemove(&itemList);
     storeList(&itemList);
     return 0;
