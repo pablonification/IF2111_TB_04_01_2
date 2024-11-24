@@ -47,6 +47,7 @@ void Login(User *users, int user_count);
 int findUser(User *users, int user_count, const char *username, const char *password);
 void Register(GameState *gameState);
 void Save(const char *filename, GameState *gameState);
+void Logout(User *users, int user_count);
 int customStringCMP(const char *str1, const char *str2);
 void customStringCPY(char *dest, const char *src);
 void insertLastItem(ListItem *itemlist, Item item);

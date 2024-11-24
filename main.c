@@ -153,6 +153,12 @@ void showMainMenu(){
 		else if (compareWords("SAVE", command, 4)){
             //Save(filename,&gameState);
         }
+        else if (compareWords("LOGOUT", command, 6)){
+            if(!isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program.\n");
+            } else {
+                Logout(gameState.users, gameState.userCount);}
+        }
         else if (compareWords("QUIT", command, 4)){
             break;
         }
@@ -337,6 +343,17 @@ void Save(const char *filename, GameState *gameState) {
 
     fclose(file);
     printf("Game berhasil disimpan dalam %s.\n", filepath);
+}
+
+void Logout(User *users, int user_count) {
+    if (!isLoggedIn) {
+        printf("Anda belum login. Silakan login terlebih dahulu.\n");
+        return;
+    }
+
+    printf("%s telah login dari sistem PURRMART. Silahkan REGISTER/LOGIN kembali untuk melanjutkan.\n", currentUser);
+    isLoggedIn = FALSE;
+    currentUser[0] = '\0';
 }
 
 int customStringCMP(const char *str1, const char *str2){
