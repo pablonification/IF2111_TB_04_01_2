@@ -77,7 +77,9 @@ void storeRequest (ListItem *L, QueueItem *Q) {
 void storeRemove(ListItem *L) {
     Word item_name;
     printf("Nama barang yang akan dihapus: ");
-    scanWord(&item_name);
+    STARTLINE();
+    item_name = currentWord;
+    
     char item_namestr[50];
     wordToString(item_name, item_namestr);
 
@@ -196,8 +198,8 @@ int main() {
     storeRequest(&itemList, &requestQueue);
     storeRequest(&itemList, &requestQueue);
     storeSupply(&itemList, &requestQueue);
-    storeSupply(&itemList, &requestQueue);
-    storeSupply(&itemList, &requestQueue);
+    //storeSupply(&itemList, &requestQueue);
+    //storeSupply(&itemList, &requestQueue);
     storeRemove(&itemList);
     storeList(&itemList);
     return 0;
