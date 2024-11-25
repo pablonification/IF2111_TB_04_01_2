@@ -11,6 +11,25 @@ void delay(int seconds) {
     while (time(NULL) - start_time < seconds);
 }
 
+int my_strlen(char *str){
+    int len = 0;
+    while(str[len] != '\0'){
+        len++;
+    }
+    return len;
+}
+
+boolean my_strcmp(char *str1, char *str2){
+    int i = 0;
+    while(str1[i] != '\0' && str2[i] != '\0'){
+        if(str1[i] != str2[i]){
+            return FALSE;
+        }
+        i++;
+    }
+    return str1[i] == str2[i];
+}
+
 //Implementasi fungsi pengumpulan input
 void collectInput(char *input){ //input per kata jadiin kalimat
     input[0] = '\0'; //inisialisasi
