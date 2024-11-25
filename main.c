@@ -151,7 +151,7 @@ void showMainMenu(){
             // storeRemove(&gameState.itemList);
         }
 		else if (compareWords("SAVE", command, 4)){
-            //Save(filename,&gameState);
+            Save("savefile.txt",&gameState);
         }
         else if (compareWords("LOGOUT", command, 6)){
             if(!isStarted){
@@ -304,11 +304,6 @@ void Register(GameState *gameState) {
 }
 
 void Save(const char *filename, GameState *gameState) {
-    if (!isGameStarted || !isConfigLoaded) {
-        printf("Anda harus memulai game dan load file konfigurasi terlebih dahulu.\n");
-        return;
-    }
-
     if (filename == NULL || *filename == '\0') {
         printf("Nama file tidak valid.\n");
         return;
@@ -318,30 +313,30 @@ void Save(const char *filename, GameState *gameState) {
     customStringCPY(filepath, "data/");
     stringConcat(filepath, filename);
     
-    FILE *file = fopen(filepath, "w");
+    FILE *file = openFile(filepath, "w");
     if (file == NULL) {
         printf("Gagal membuat file save.\n");
         return;
     }
 
-    fprintf(file, "%d\n", gameState->itemList.itemLength);
+    writeLen(file, "%d\n", gameState->itemList.itemLength);
 
     for (int i = 0; i < gameState->itemList.itemLength; i++) {
-        fprintf(file, "%d %s\n", 
+        writeItem(file, "%d %s\n", 
             gameState->itemList.item[i].price,
             gameState->itemList.item[i].name);
     }
 
-    fprintf(file, "%d\n", gameState->userCount);
+    writeLen(file, "%d\n", gameState->userCount);
 
     for (int i = 0; i < gameState->userCount; i++) {
-        fprintf(file, "%d %s %s\n",
+        writeUser(file, "%d %s %s\n",
             gameState->users[i].money,
             gameState->users[i].name,
             gameState->users[i].password);
     }
 
-    fclose(file);
+    closeFile(file);
     printf("Game berhasil disimpan dalam %s.\n", filepath);
 }
 
