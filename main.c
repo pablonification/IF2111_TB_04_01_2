@@ -18,10 +18,10 @@ boolean isGameStarted = FALSE;
 boolean isStarted = FALSE;
 
 // Fungsi
-int main(){
-    showMainMenu();
-    return 0;
-}
+// int main(){
+//     showMainMenu();
+//     return 0;
+// }
 void showMainMenu(){   
     static GameState gameState = {0};
     gameState.isInitialized = FALSE; 

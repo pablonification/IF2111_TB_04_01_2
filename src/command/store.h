@@ -28,4 +28,6 @@ IdxType LastIdxItem(ListItem L);
 
 boolean SearchItem(ListItem L, char *X);
 
+void storeRequestBIO(ListItem *L, QueueItem *Q, Word req);
+
 #endif

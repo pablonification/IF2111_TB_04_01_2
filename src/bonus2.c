@@ -1,5 +1,8 @@
+
 #include <stdio.h>
 #include "misc.h"
+#include "command/store.h"
+// #include "../main.h"
 
 void DNAtoRNA(Word DNA, Word *RNA) {
     int idx = 0;
@@ -66,14 +69,25 @@ char translateCodon(char *codon) {
     return '?'; // invalid codon
 }
 
-/*int main() {
-    Word DNA;
-    Word RNA;
+void addItemToStore (ListItem *L, QueueItem *Q, Word name){
+    // Word name;
+    storeRequestBIO(L, Q, name);
+}
+
+void processDNA() {
+    Word DNA, RNA, weapon;
+    Word name;
     char protein[1000];
     int validProtein = 0;
     int idx = 0, proteinIdx = 0;
+    ListItem itemList;
+    QueueItem requestQueue;
     
     while(!validProtein){
+        printf("Masukan nama senjata biologis: ");
+        STARTLINE();
+        weapon = currentWord;
+
         printf("DNA: ");
         scanWord(&DNA);
 
@@ -101,8 +115,6 @@ char translateCodon(char *codon) {
         }
     }
 
-
-
     Word secretCode;
     printf("Masukkan kode rahasia: ");
     scanWord(&secretCode);
@@ -110,7 +122,7 @@ char translateCodon(char *codon) {
     int idxSC = secretCode.Length;
     printf("%d <<<<<<<< index secret code\n", idxSC);
 
-    // Check if secretCode is in protein
+    // cek secret code di protein
     int found = 0;
     for (int i = 0; i <= proteinIdx - idxSC; i++) {
         int j = 0;
@@ -124,10 +136,14 @@ char translateCodon(char *codon) {
     }
 
     if (found) {
+        addItemToStore(&itemList, &requestQueue, weapon);
         printf("Senjata biologis mengandung kode, barang akan ditambahkan ke dalam queue!\n");
     } else {
         printf("Kode rahasia tidak ditemukan, maka senjata biologis sudah disabotase, barang ditolak!\n");
     }
+}
 
+int main() {
+    processDNA();
     return 0;
-}*/
+}

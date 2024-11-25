@@ -1,3 +1,4 @@
+
 /*
 isEmpty harus buat lagi
 
@@ -9,6 +10,7 @@ terus fungsi aymar juga ada yg harus dibuat lagi insertLast
 #include "../misc.h"
 #include "../ADT/mesinkata.h"
 #include "../ADT/mesinkarakter.h"
+// #include "bonus2.h"
 
 void storeList (ListItem *L) {
     if (IsEmptyItem(L)) {
@@ -53,6 +55,38 @@ void storeRequest(ListItem *L, QueueItem *Q) {
                 foundInQueue = TRUE;
             }
             enqueueItem(Q, temp); // Re-enqueue the item
+        }
+
+        if (foundInQueue) {
+            printf("Barang dengan nama yang sama sudah ada di antrian\n");
+        } else {
+            enqueueItem(Q, reqstr);
+        }
+    }
+}
+
+void storeRequestBIO(ListItem *L, QueueItem *Q, Word req) {
+    char reqstr[MaxEl]; 
+    boolean found = FALSE;
+
+    wordToString(req, reqstr); 
+
+    boolean isFoundInList = SearchItem(*L, reqstr);
+    if (isFoundInList) {
+        printf("Barang dengan nama yang sama sudah ada di toko\n");
+    } else if (isEmptyItem(*Q)) {
+        enqueueItem(Q, reqstr);
+    } else {
+        boolean foundInQueue = FALSE;
+        int queueLength = lengthQueueItem(*Q);
+
+        for (int i = 0; i < queueLength; i++) {
+            char temp[MaxEl];
+            dequeueItem(Q, temp); // deq
+            if (customStringCMP(temp, reqstr) == 0) {
+                foundInQueue = TRUE;
+            }
+            enqueueItem(Q, temp); // eq item
         }
 
         if (foundInQueue) {
@@ -150,11 +184,11 @@ void DeleteAtItem(ListItem *L, IdxType i) {
 }
 
 IdxType LastIdxItem(ListItem L) {
-	int i = 0;
-	while ((i < MaxEl) && (L.item[i+1].name != '\0')) {
-		i += 1;
-	}
-	return i;
+    int i = 0;
+    while ((i < MaxEl) && (L.item[i].name[0] != '\0')) {
+        i += 1;
+    }
+    return i - 1;
 }
 
 boolean SearchItem(ListItem L, char *X) {
@@ -173,28 +207,28 @@ boolean SearchItem(ListItem L, char *X) {
     return found;
 }
 
-int main() {
-    ListItem itemList = {
-        .item = {
-        {"AK47", 20},
-        {"Lalabu", 20},
-        {"Ayam Goreng Crisbar", 10},
-        {"Kunjaw UAS Alstrukdat", 50}
-        },
-        .itemLength = 4
-    };
+// int main() {
+//     ListItem itemList = {
+//         .item = {
+//         {"AK47", 20},
+//         {"Lalabu", 20},
+//         {"Ayam Goreng Crisbar", 10},
+//         {"Kunjaw UAS Alstrukdat", 50}
+//         },
+//         .itemLength = 4
+//     };
 
-    QueueItem requestQueue;
-    CreateQueueItem(&requestQueue);
+//     QueueItem requestQueue;
+//     CreateQueueItem(&requestQueue);
 
-    storeList(&itemList);
-    storeRequest(&itemList, &requestQueue);
-    storeRequest(&itemList, &requestQueue);
-    storeRequest(&itemList, &requestQueue);
-    storeSupply(&itemList, &requestQueue);
-    storeSupply(&itemList, &requestQueue);
-    storeSupply(&itemList, &requestQueue);
-    storeRemove(&itemList);
-    storeList(&itemList);
-    return 0;
-}
+//     storeList(&itemList);
+//     storeRequest(&itemList, &requestQueue);
+//     storeRequest(&itemList, &requestQueue);
+//     storeRequest(&itemList, &requestQueue);
+//     storeSupply(&itemList, &requestQueue);
+//     storeSupply(&itemList, &requestQueue);
+//     storeSupply(&itemList, &requestQueue);
+//     storeRemove(&itemList);
+//     storeList(&itemList);
+//     return 0;
+// }
