@@ -81,3 +81,34 @@ void ADV() {
     EOP = (currentChar == MARK);
 }
 
+FILE* openFile(const char* filepath, const char* mode) {
+    /* Membuka file dengan mode tertentu
+       Mode yang didukung: "r" untuk read, "w" untuk write
+       Mengembalikan NULL jika gagal membuka file */
+    return fopen(filepath, mode);
+}
+
+void writeItem(FILE *f, const char *format, int num1, char *str1) {
+    /* Menulis integer dan string ke file
+       Format yang didukung: "%d %s\n" */
+    fprintf(f, format, num1, str1);
+}
+
+void writeLen(FILE *f, const char *format, int num1) {
+    /* Menulis single integer ke file
+       Format yang didukung: "%d\n" */
+    fprintf(f, format, num1);
+}
+
+void writeUser(FILE *f, const char *format, int num1, char *str1, char *str2) {
+    /* Menulis integer dan dua string ke file
+       Format yang didukung: "%d %s %s\n" */
+    fprintf(f, format, num1, str1, str2);
+}
+
+void closeFile(FILE *f) {
+    /* Menutup file yang sudah dibuka */
+    if (f != NULL) {
+        fclose(f);
+    }
+}
