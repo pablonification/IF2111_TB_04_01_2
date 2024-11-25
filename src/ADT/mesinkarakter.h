@@ -27,6 +27,7 @@ void STARTFILE(char* file_name, boolean *success);
           Jika currentChar != MARK maka EOP akan padam (false)
           Jika currentChar = MARK maka EOP akan menyala (true) */
 
+
 void START();
 /* Mesin siap dioperasikan. Pita disiapkan untuk dibaca.
    Karakter pertama yang ada pada pita posisinya adalah pada jendela.
@@ -43,15 +44,4 @@ void ADV();
    F.S. : currentChar adalah karakter berikutnya dari currentChar yang lama,
           currentChar mungkin = MARK
           Jika  currentChar = MARK maka EOP akan menyala (true) */
-
-
-FILE* openFile(const char* filepath, const char* mode);
-int readFile(FILE *f, const char *format, int *num);
-int readItem(FILE *f, const char *format, int *num, char *str);
-int readUser(FILE *f, const char *format, int *num, char *str1, char *str2);
-void writeItem(FILE *f, const char *format, int num1, char *str1);
-void writeLen(FILE *f, const char *format, int num1);
-void writeUser(FILE *f, const char *format, int num1, char *str1, char *str2);
-void closeFile(FILE *f);
-
 #endif

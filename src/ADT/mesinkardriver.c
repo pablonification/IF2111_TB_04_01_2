@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "mesinkarakter.h"  
 
+
 int main() {
     boolean success = TRUE;
     printf("\nMasukkan input:\n");

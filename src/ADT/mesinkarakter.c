@@ -128,7 +128,6 @@ void writeUser(FILE *f, const char *format, int num1, char *str1, char *str2) {
 }
 
 void closeFile(FILE *f) {
-/* Menutup file yang sudah dibuka */
     if (f != NULL) {
         fclose(f);
     }

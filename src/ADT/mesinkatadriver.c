@@ -48,6 +48,5 @@ int main() {
     }
     free(wordsList);  // Bebaskan daftar kata
     
-
     return 0;
 }

@@ -38,35 +38,6 @@ int main () {
     if (Search(l3, 300)) {
         printf("Angka ditemukan.\n");
     }
-
-
-    // ListItem itemList = {
-    //     .item = {
-    //     {"AK47", 20},
-    //     {"Lalabu", 20},
-    //     {"Ayam Goreng Crisbar", 10},
-    //     {"Kunjaw UAS Alstrukdat", 50}
-    //     },
-    //     .itemLength = 4
-    // };
-
-    // if (IsEmptyItem(&itemList)) {
-    //     printf("Kosong\n");
-    // }
-    // else {
-    //     printf("Tidak kosong\n");
-    // }
-
-    // printf("%d/n", LastIdxItem(itemList));
-    // DeleteAtItem(&itemList, 2);
-    
-    // if (SearchItem(itemList, "Ayam Goreng Crisbar")) {
-    //     printf("Ditemukan\n");
-    // }
-    // else {
-    //     printf("Tidak ditemukan\n");
-    // }
-    // return 0;
 }
 
 // gcc -o list list.c
