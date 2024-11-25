@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
-#include "../ADT/list.h"
-#include "../ADT/queue.h"
-#include "../ADT/mesinkata.h"
-#include "../ADT/mesinkarakter.h"
+//#include "../ADT/list.h"
+//#include "../ADT/queue.h"
+//#include "../ADT/mesinkata.h"
+//#include "../ADT/mesinkarakter.h"
 #include "../../main.h"
 
 void storeList (ListItem *L);

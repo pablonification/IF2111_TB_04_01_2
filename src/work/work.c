@@ -11,6 +11,25 @@ void delay(int seconds) {
     while (time(NULL) - start_time < seconds);
 }
 
+unsigned my_strlen(char *str){
+    unsigned len = 0;
+    while(str[len] != '\0'){
+        len++;
+    }
+    return len;
+}
+
+boolean my_strcmp(char *str1, char *str2){
+    int i = 0;
+    while(str1[i] != '\0' && str2[i] != '\0'){
+        if(str1[i] != str2[i]){
+            return FALSE;
+        }
+        i++;
+    }
+    return str1[i] == str2[i];
+}
+
 //Implementasi fungsi pengumpulan input
 void collectInput(char *input){ //input per kata jadiin kalimat
     input[0] = '\0'; //inisialisasi
@@ -38,7 +57,7 @@ void collectInput(char *input){ //input per kata jadiin kalimat
 }
 
 
-void work(int balance){
+void work(int *balance){
     Work workList[] = {
         {"Asisten Praktikum Alstrukdat", 1000, 10},
         {"Penghangat Kursi Labdas", 500, 6},
@@ -77,5 +96,5 @@ void work(int balance){
     delay(workList[selectedWorkIndex].workDuration);
     printf("Pekerjaan telah selesai. Anda mendapatkan gaji $%d\n", workList[selectedWorkIndex].workPayment);
 
-    balance += workList[selectedWorkIndex].workPayment;
+    *balance += workList[selectedWorkIndex].workPayment;
 }

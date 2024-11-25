@@ -66,6 +66,73 @@ char translateCodon(char *codon) {
     return '?'; // invalid codon
 }
 
+void processDNA(){
+    Word DNA;
+    Word RNA, weapon;
+    char protein[1000];
+    int validProtein = 0;
+    int idx = 0, proteinIdx = 0;
+    
+    while(!validProtein){
+        printf("Senjata yang ingin dimasukkan: ");
+        STARTLINE();
+        weapon = currentWord;
+        printf("DNA: ");
+        scanWord(&DNA);
+
+        // DNA KE RNA
+        DNAtoRNA(DNA, &RNA);
+
+        // RNA KE PROTEIN
+        
+        while (idx < RNA.Length) {
+            char codon[4] = {RNA.TabWord[idx], RNA.TabWord[idx + 1], RNA.TabWord[idx + 2], '\0'};
+            protein[proteinIdx++] = translateCodon(codon);
+            idx += 3;
+        }
+        protein[proteinIdx] = '\0';
+        printf("Protein >>>> %s\n", protein);
+
+        // check ada ? gk
+        validProtein = 1;
+        for(int i = 0; i < proteinIdx; i++){
+            if(protein[i] == '?'){
+                validProtein = 0;
+                printf("Protein mengandung codon yang invalid. Tolong masukkan DNA yang valid!\n");
+                break;
+            }
+        }
+    }
+
+
+
+    Word secretCode;
+    printf("Masukkan kode rahasia: ");
+    scanWord(&secretCode);
+
+    int idxSC = secretCode.Length;
+    printf("%d <<<<<<<< index secret code\n", idxSC);
+
+    // Check if secretCode is in protein
+    int found = 0;
+    for (int i = 0; i <= proteinIdx - idxSC; i++) {
+        int j = 0;
+        while (j < secretCode.Length && protein[i + j] == secretCode.TabWord[j]) {
+            j++;
+        }
+        if (j == secretCode.Length) {
+            found = 1;
+            break;
+        }
+    }
+
+    if (found) {
+        printf("Senjata biologis mengandung kode, barang akan ditambahkan ke dalam queue!\n");
+    } else {
+        printf("Kode rahasia tidak ditemukan, maka senjata biologis sudah disabotase, barang ditolak!\n");
+    }
+}
+
 /*int main() {
     Word DNA;
     Word RNA;

@@ -20,6 +20,6 @@ void INITIALIZED_QWORDL3(char ***wordsList, int *wordCount);
 
 boolean compareWordss(const char *word1, const char *word2);
 
-void playQuantumWordl3();
+void playQuantumWordl3(int *money);
 
 #endif 

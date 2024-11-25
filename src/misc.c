@@ -90,4 +90,15 @@ void wordToString(Word word, char *str) {
     str[i] = '\0';
 }
 
+boolean compareWords(const char *str, Word word, int length) {
+    if (word.Length != length) {
+        return FALSE;
+    }
+    for (int i = 0; i < length; i++) {
+        if (str[i] != word.TabWord[i]) {
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
 

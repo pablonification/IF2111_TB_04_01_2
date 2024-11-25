@@ -5,6 +5,8 @@
 #include "ADT/mesinkarakter.h"
 #include "ADT/mesinkata.h"
 #include "wordl32.h"
+#include "misc.h"
+#include "qwordl3.h"
 
 #define WORD_LENGTH 5
 #define MAX_ATTEMPTS 5
@@ -48,29 +50,29 @@ boolean isValidGuess(Word guess) {
     return (guess.Length == WORD_LENGTH);
 }
 
-boolean compareWords(const char *target, Word guess, int LENGTH) {
-    Word targetWord;
-    targetWord.Length = LENGTH;
-    for (int i = 0; i < LENGTH; i++) {
-        targetWord.TabWord[i] = target[i];
-    }
+// boolean compareWords(const char *target, Word guess, int LENGTH) {
+//     Word targetWord;
+//     targetWord.Length = LENGTH;
+//     for (int i = 0; i < LENGTH; i++) {
+//         targetWord.TabWord[i] = target[i];
+//     }
 
-    return isKataEqual(targetWord, guess);
-}
+//     return isKataEqual(targetWord, guess);
+// }
 
-void INITIALIZED_WORDL3(char ***wordsList, int *wordCount) {
-    LoadWordsFromFile("words.txt", wordsList, wordCount);
-}
+// void INITIALIZED_WORDL3(char ***wordsList, int *wordCount) {
+//     LoadWordsFromFile("words.txt", wordsList, wordCount);
+// }
 
-void playWordl3(int money) {
-    if (money < 500){
-        printf("Uang anda kurang, challange ini membutuhkan 500 koin, koin anda saat ini %d\n", money);
+void playWordl3(int *money) {
+    if (*money < 500){
+        printf("Uang anda kurang, challange ini membutuhkan 500 koin, koin anda saat ini %d\n", *money);
         return;
     } else {
-        money -= 500;
+        *money -= 500;
         char **wordsList;
         int wordCount;
-        INITIALIZED_WORDL3(&wordsList, &wordCount);
+        INITIALIZED_QWORDL3(&wordsList, &wordCount);
 
         srand(time(NULL));
         char *answer = wordsList[rand() % wordCount];
@@ -126,7 +128,7 @@ void playWordl3(int money) {
 
         if (win) {
             printf("Selamat, Anda menang!\n+1500 rupiah telah ditambahkan ke akun Anda.\n");
-            money += 1500;
+            *money += 1500;
         } else {
             printf("Boo! Anda kalah. Jawaban yang benar adalah: %s\n", answer);
         }

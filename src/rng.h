@@ -8,6 +8,6 @@
 #include "misc.h"
 
 // Fungsi untuk memulai permainan tebak angka
-void tebakAngkaRNG();
+void tebakAngkaRNG(int *money);
 
 #endif // RNG_H

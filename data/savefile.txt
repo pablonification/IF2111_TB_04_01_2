@@ -3,6 +3,6 @@
 20 Lalabu
 20 Ayam Goreng Crisbar
 3
-100 admin alstrukdatkeren
+1000 admin alstrukdatkeren
 25 praktikan kerenbangetkak
 0 DrDevun AworAworMantab

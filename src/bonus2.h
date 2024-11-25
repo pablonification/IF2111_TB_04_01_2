@@ -9,5 +9,6 @@ void DNAtoRNA(Word DNA, Word *RNA);
 
 // Fungsi untuk menerjemahkan codon RNA menjadi asam amino
 char translateCodon(char *codon);
+void processDNA();
 
 #endif // BONUS2_H

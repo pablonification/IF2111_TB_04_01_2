@@ -56,8 +56,8 @@ void tebakAngkaRNG(int *money) {
 
 
 /*int main() {
-    int money = 1000; 
-    tebakAngkaRNG(&money);
-    printf("Sisa uang anda: %d\n", money);
+    int *money = 1000; 
+    tebakAngkaRNG(&*money);
+    printf("Sisa uang anda: %d\n", *money);
     return 0;
 }*/

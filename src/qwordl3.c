@@ -59,15 +59,15 @@ boolean compareWordss(const char *word1, const char *word2) {
 }
 
 void INITIALIZED_QWORDL3(char ***wordsList, int *wordCount) {
-    LoadWordsFromFile("words.txt", wordsList, wordCount);
+    LoadWordsFromFile("src/words.txt", wordsList, wordCount);
 }
 
-void playQuantumWordl3(int money) {
-    if (money < 1000){
-        printf("Uang anda kurang, challange ini membutuhkan 500 koin, koin anda saat ini %d\n", money);
+void playQuantumWordl3(int *money) {
+    if (*money < 1000){
+        printf("Uang anda kurang, challange ini membutuhkan 500 koin, koin anda saat ini %d\n", *money);
         return;
     } else {
-        money -= 1000;
+        *money -= 1000;
         char **wordsList;
         int wordCount;
         INITIALIZED_QWORDL3(&wordsList, &wordCount);
@@ -169,7 +169,7 @@ void playQuantumWordl3(int money) {
         // Display the end message
         if (win) {
             printf("Selamat, Anda menang! +5000 rupiah telah ditambahkan ke akun Anda.\n");
-            money += 5000;
+            *money += 5000;
         } else {
             printf("Boo! Anda kalah. Jawaban yang benar adalah:\n");
             for (int w = 0; w < TOTAL_WORDS; w++) {

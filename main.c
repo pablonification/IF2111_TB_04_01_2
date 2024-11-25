@@ -1,186 +1,240 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "main.h"
-#include "src/misc.h"
+#include "src/work/work.h"
+
+char pwdstr[MAX_LEN], userstr[MAX_LEN], currentUser[MAX_LEN] = "";
 
 
-
-/*
-harusnya LOAD dulu baru START
-CURRENT CONDITION : START DULU BARU LOAD
-
-*/
-
-boolean isLoggedIn = FALSE;
-char currentUser[MAX_LEN];
-boolean isConfigLoaded = FALSE;
-boolean isGameStarted = FALSE;
-boolean isStarted = FALSE;
-
-// Fungsi
+// Fungsi  Main
 int main(){
     showMainMenu();
     return 0;
 }
+
 void showMainMenu(){   
-    static GameState gameState = {0};
-    gameState.isInitialized = FALSE; 
-    gameState.isStateLoaded = FALSE;
+    GameState gameState = {0};
+    gameState.isStarted = FALSE; 
+    gameState.isLoaded = FALSE;
+    gameState.isLogin = FALSE;
     makeListItem(&gameState);
-    char filepath[MAX_LEN] = "data/savefile.txt";
 
     printf("                                                                                           \n"
-        "                                                                                           \n"
-        "_________   _...._                               __  __   ___                              \n"
-        "\\        |.'      '-.                           |  |/  `.'   `.                            \n"
-        " \\        .'```'.    '.         .-,.--. .-,.--. |   .-.  .-.   '          .-,.--.      .|  \n"
-        "  \\      |       \\     \\        |  .-. ||  .-. ||  |  |  |  |  |    __    |  .-. |   .' |_ \n"
-        "   |     |        |    |_    _  | |  | || |  | ||  |  |  |  |  | .:--.'.  | |  | | .'     |\n"
-        "   |      \\      /    .| '  / | | |  | || |  | ||  |  |  |  |  |/ |   \\ | | |  | |'--.  .-'\n"
-        "   |     |\\`'-.-'   .'.' | .' | | |  '- | |  '- |  |  |  |  |  |`\" __ | | | |  '-    |  |  \n"
-        "   |     | '-....-'`  /  | /  | | |     | |     |__|  |__|  |__| .'.''| | | |        |  |  \n"
-        "  .'     '.          |   `'.  | | |     | |                     / /   | |_| |        |  '.'\n"
-        "'-----------'        '   .'|  '/|_|     |_|                     \\ \\._,\\ '/|_|        |   / \n"
-        "                      `-'  `--'                                  `--'  \"            `'-'   \n");
+           "                                                                                           \n"
+           "_________   _...._                               __  __   ___                              \n"
+           "\\        |.'      '-.                           |  |/  `.'   `.                            \n"
+           " \\        .'```'.    '.         .-,.--. .-,.--. |   .-.  .-.   '          .-,.--.      .|  \n"
+           "  \\      |       \\     \\        |  .-. ||  .-. ||  |  |  |  |  |    __    |  .-. |   .' |_ \n"
+           "   |     |        |    |_    _  | |  | || |  | ||  |  |  |  |  | .:--.'.  | |  | | .'     |\n"
+           "   |      \\      /    .| '  / | | |  | || |  | ||  |  |  |  |  |/ |   \\ | | |  | |'--.  .-'\n"
+           "   |     |\\`'-.-'   .'.' | .' | | |  '- | |  '- |  |  |  |  |  |`\" __ | | | |  '-    |  |  \n"
+           "   |     | '-....-'`  /  | /  | | |     | |     |__|  |__|  |__| .'.''| | | |        |  |  \n"
+           "  .'     '.          |   `'.  | | |     | |                     / /   | |_| |        |  '.'\n"
+           "'-----------'        '   .'|  '/|_|     |_|                     \\ \\._,\\ '/|_|        |   / \n"
+           "                      `-'  `--'                                  `--'  \"            `'-'   \n");
 
-    printf("Selamat datang di PURRMART!\nTolong masukkan command yang valid (START, LOAD <filename>, REGISTER, LOGIN, HELP, atau QUIT.)\n");
+    printf("Selamat datang di PURRMART!\nTolong masukkan command yang valid (START, LOAD, REGISTER, LOGIN, HELP, atau QUIT.)\n");
 
     while (1) {
         printf(">> ");
-		Word command;
+        Word command;
         STARTLINE();
         command = currentWord;
 
-		if (compareWords("START", command, 5)){
-            Start(&gameState);
+        if (compareWords("START", command, 5)){
+            if (!gameState.isLoaded) {
+                printf("Anda harus load file konfigurasi terlebih dahulu.\n");
+            } else {
+                Start(&gameState);
+                gameState.isStarted = TRUE;
+            }
         } 
         else if (compareWords("LOAD", command, 4)){
-            printf("Masukkan nama file yang akan diload: ");
-            
-            Word filename;
-            STARTLINE();
-            filename = currentWord;
-            
-            char file[MAX_LEN];
-            wordToString(filename,file);
-            Load(file, &gameState);
-        } 
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Masukkan nama file yang akan diload: ");
+                Word filename;
+                STARTLINE();
+                filename = currentWord;
+
+                char file[MAX_LEN];
+                wordToString(filename, file);
+                Load(file, &gameState);
+                gameState.isLoaded = TRUE;
+                gameState.users[0].money = 1000;
+            } else{
+                printf("Game sudah dimulai. Tidak bisa load file konfigurasi.\n");
+            }
+        }
         else if (compareWords("HELP", command, 4)){
-            if (!isStarted){
+            if (!gameState.isLoaded && !gameState.isStarted && !gameState.isLogin){
                 printf("START -> Untuk masuk sesi baru\n");
                 printf("LOAD -> Untuk memulai sesi berdasarkan file konfigurasi\n");
                 printf("QUIT -> Untuk keluar dari program\n");
-            } else {
-                if (!isLoggedIn){
-                printf("=====[ Login Menu Help PURRMART]=====\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){ 
+                printf("=====[ Login Menu Help PURRMART ]=====\n");
                 printf("REGISTER -> Untuk melakukan pendaftaran akun baru\n");
                 printf("LOGIN -> Untuk masuk ke dalam akun dan memulai sesi\n");
                 printf("QUIT -> Untuk keluar dari program\n");   
-                } else {
-                    printf("=====[ Menu Help PURRMART]=====\n");
-                    printf("WORK -> Untuk bekerja\n");
-                    printf("WORK CHALLENGE -> Untuk mengerjakan challenge\n");
-                    printf("STORE LIST -> Untuk melihat barang-barang di toko\n");
-                    printf("STORE REQUEST -> Untuk meminta penambahan barang\n");
-                    printf("STORE SUPPLY -> Untuk menambahkan barang dari permintaan\n");
-                    printf("STORE REMOVE -> Untuk menghapus barang\n");
-                    printf("LOGOUT -> Untuk keluar dari sesi\n");
-                    printf("SAVE -> Untuk menyimpan state ke dalam file");
-                    printf("QUIT -> Untuk keluar dari program\n");
-                }
+            } else if (gameState.isLoaded && gameState.isStarted && gameState.isLogin){ 
+                printf("=====[ Menu Help PURRMART ]=====\n");
+                printf("WORK -> Untuk bekerja\n");
+                printf("WORK CHALLENGE -> Untuk mengerjakan challenge\n");
+                printf("STORE LIST -> Untuk melihat barang-barang di toko\n");
+                printf("STORE REQUEST -> Untuk meminta penambahan barang\n");
+                printf("STORE SUPPLY -> Untuk menambahkan barang dari permintaan\n");
+                printf("STORE REMOVE -> Untuk menghapus barang\n");
+                printf("LOGOUT -> Untuk keluar dari sesi\n");
+                printf("SAVE -> Untuk menyimpan state ke dalam file\n");
+                printf("QUIT -> Untuk keluar dari program\n");
             }
         }
-		else if (compareWords("LOGIN", command, 5)){
-            if (!isStarted){
+        else if (compareWords("LOGIN", command, 5)){
+            if (!gameState.isLoaded && !gameState.isStarted){
                 printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && gameState.isLogin){
+                printf("Anda masih tercatat sebagai %s. Silahkan LOGOUT terlebih dahulu.\n", currentUser);
             } else {
                 Login(gameState.users, gameState.userCount);
+                gameState.isLogin = TRUE;
+                //gameState.users->money = gameState.users[0].money;
+                //printf("%d\n", gameState.users->money);
             }
         }
         else if (compareWords("LOGOUT", command, 6)){
-            
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){
+                printf("Anda belum login. Silakan login terlebih dahulu\n");
+            } else {
+                Logout(gameState.users, gameState.userCount);
+                gameState.isLogin = FALSE;
+            }
         }
-		else if (compareWords("REGISTER", command, 7)){
-            if (!isStarted){
-                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program");
+        else if (compareWords("REGISTER", command, 8)){
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && gameState.isLogin){
+                printf("Anda sudah login. Silahkan LOGOUT terlebih dahulu.\n");
             } else {
                 Register(&gameState);
+                gameState.isLogin = TRUE;
+            }
+        }
+        else if (compareWords("WORK", command, 4)){
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){
+                printf("Lakukan login atau register terlebih dahulu\n");
+            } else {
+                work(&gameState.users->money);
             } 
         }
-		else if (compareWords("WORK", command, 4)){
-            // work(&gameState.users->money); 
-        }
- 		else if (compareWords("WORK CHALLANGE", command, 14)){
-            if (!isStarted){
-                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program");
+        else if (compareWords("WORK CHALLENGE", command, 14)){
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){
+                printf("Lakukan login atau register terlebih dahulu\n");
             } else {
-                if (!isLoggedIn){
-                printf("Lakukan login atau register terlebih dahulu");
-                } else {
-                    printf("Daftar challenge yang tersedia:\n");
-                    printf("1. Tebak Angka (biaya main=200)\n");
-                    printf("2. W0RDL399 (biaya main=500)\n");
-                    printf("3. QUANTUM W0RDL399 (biaya main=1000)\n");
+                printf("Daftar challenge yang tersedia:\n");
+                printf("1. Tebak Angka (biaya main=200)\n");
+                printf("2. W0RDL399 (biaya main=500)\n");
+                printf("3. QUANTUM W0RDL399 (biaya main=1000)\n");
 
-                    printf("Masukan challenge yang hendak dimainkan: ");
-                    Word choice;
-                    STARTLINE();
-                    choice = currentWord;
+                printf("Masukan challenge yang hendak dimainkan: ");
+                Word choice;
+                STARTLINE();
+                choice = currentWord;
 
-                    if (compareWords("1", choice, 1)){
-                        tebakAngkaRNG();
-                    }
-                    else if (compareWords("2", choice, 1)){
-                        playWordl3();
-                    }
-                    else if (compareWords("3", choice, 1)){
-                        playQuantumWordl3();
-                    }
+                if (compareWords("1", choice, 1)){
+                    tebakAngkaRNG(&gameState.users->money);
+                }
+                else if (compareWords("2", choice, 1)){
+                    playWordl3(&gameState.users->money);
+                }
+                else if (compareWords("3", choice, 1)){
+                    playQuantumWordl3(&gameState.users->money);
                 }
             }
         }
-		else if (compareWords("STORE LIST", command, 10)){
-            // storeList(&gameState.itemList);
+        else if (compareWords("STORE LIST", command, 10)){
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){
+                printf("Lakukan login atau register terlebih dahulu\n");
+            } else {
+                storeList(&gameState.itemList);
+            }
         }
-		else if (compareWords("STORE REQUEST", command, 13)){
+        else if (compareWords("STORE REQUEST", command, 13)){
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){
+                printf("Lakukan login atau register terlebih dahulu\n");
+            } 
+            else {
+                storeRequest(&gameState.itemList, &gameState.requestQueue);
+            }
 
         }
-		else if (compareWords("STORE SUPPLY", command, 12)){
-            
+        else if (compareWords("STORE REQUEST BIOWEAPON", command, 23)){
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){
+                printf("Lakukan login atau register terlebih dahulu\n");
+            } 
+            else {
+                processDNA();
+            }
+
         }
-		else if (compareWords("STORE REMOVE", command, 12)){
-            // storeRemove(&gameState.itemList);
-        }
-		else if (compareWords("SAVE", command, 4)){
-            Save("savefile.txt",&gameState);
-        }
-        else if (compareWords("LOGOUT", command, 6)){
-            if(!isStarted){
-                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program.\n");
+        else if (compareWords("STORE SUPPLY", command, 12)){
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){
+                printf("Lakukan login atau register terlebih dahulu\n");
             } else {
-                Logout(gameState.users, gameState.userCount);}
+                storeSupply(&gameState.itemList, &gameState.requestQueue);
+            }
+        }
+        else if (compareWords("STORE REMOVE", command, 12)){
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){
+                printf("Lakukan login atau register terlebih dahulu\n");
+            } else {
+                storeRemove(&gameState.itemList);
+            }
+        }
+        else if (compareWords("SAVE", command, 4)){
+            if (!gameState.isLoaded && !gameState.isStarted){
+                printf("Lakukan Command LOAD dan START terlebih dahulu untuk memulai program\n");
+            } else if (gameState.isLoaded && gameState.isStarted && !gameState.isLogin){
+                printf("Lakukan login atau register terlebih dahulu\n");
+            } else {
+                 Save("savefile.txt", &gameState);
+            }
         }
         else if (compareWords("QUIT", command, 4)){
+            printf("Keluar dari program... \n");
             break;
         }
         else {
             printf("Command tidak valid. Silakan coba command yang valid.\n");
         }
-     }
+    }
 }
 
 boolean Start(GameState *gameState) {
-    if (!gameState->isStateLoaded) {
+    if (!gameState->isLoaded) {
         printf("Anda harus load file konfigurasi terlebih dahulu.\n");
-        return gameState->isInitialized = FALSE;
-    }
-    else {
-
+        return FALSE;
+    } else {
         printf("Game berhasil dimulai. Selamat bermain!\n");
-        return gameState->isInitialized = TRUE;
-        }
+        return TRUE;
+    }
 }
 
+// Implement other functions as in your original code...
 
 void Load(const char *filename, GameState *gameState) {
     if (filename == NULL || *filename == '\0') {
@@ -240,14 +294,15 @@ void Load(const char *filename, GameState *gameState) {
         }
 
         gameState->users[i].money = money;
+        printf("%d\n", money);
         customStringCPY(gameState->users[i].name, username);
         customStringCPY(gameState->users[i].password, password);
         gameState->userCount++;
     }
 
-    gameState->isStateLoaded = TRUE;
+    gameState->isLoaded = TRUE;
     closeFile(file);
-    testGameState(gameState);
+    printLoad(gameState);
     printf("File konfigurasi berhasil diload. PURRMART siap digunakan.\n");
 }
 
@@ -263,66 +318,82 @@ int findUser(User *users, int user_count, const char *username, const char *pass
 }
 
 void Login(User *users, int user_count) {
-    if(isLoggedIn) {
-        printf("Anda masih tercatat sebagai %s. Silahkan LOGOUT terlebih dahulu.\n", currentUser);
-        return;
-    }
 
     Word username,password;
     
     printf("Username: ");
     STARTLINE();
     username = currentWord;
+    wordToString(username, userstr);
 
     printf("Password: ");
     STARTLINE();
     password = currentWord;
+    wordToString(password, pwdstr);
 
-    int userIndex = findUser(users, user_count, username.TabWord, password.TabWord);
+    int userIndex = findUser(users, user_count, userstr, pwdstr);
     
     if(userIndex != -1) {
         customStringCPY(currentUser, users[userIndex].name);
-        isLoggedIn = TRUE;
         printf("Anda telah berhasil login sebagai %s.\n", currentUser);
+        users->money = users[userIndex].money;
+
     }
     else {
         printf("Username atau password salah. Silakan coba lagi.\n");
     }
+
+}
+
+void Logout(User *users, int user_count) {
+    printf("%s telah logout dari sistem PURRMART. Silakan REGISTER/LOGIN kembali untuk melanjutkan.\n", currentUser);
+    currentUser[0] = '\0';  // Clear the currentUser string
 }
 
 void Register(GameState *gameState) {
+    if (!gameState->isLoaded && !gameState->isStarted) {
+        printf("Game belum dimulai. Silakan load dan start terlebih dahulu\n");
+        return;
+    }
+
     Word username, password;
     
     printf("Username: ");
     STARTLINE();
     username = currentWord;
-    
-    for (int i = 0; i < gameState->userCount; i++) {
-        if (compareWords(gameState->users->name,username,username.Length) == 0) {
-            printf("Username %s sudah terdaftar. Silakan gunakan username lain.\n", username);
-            return;
-        }
-    }
+    wordToString(username, userstr);
     
     printf("Password: ");
     STARTLINE();
     password = currentWord;
-
+    wordToString(password, pwdstr);
+    
     if (gameState->userCount >= MAX_USERS) {
         printf("Maksimum jumlah pengguna telah tercapai.\n");
         return;
     }
+    
+    for (int i = 0; i < gameState->userCount; i++) {
+        if (compareWords(gameState->users[i].name, username, username.Length)) {
+            printf("Username %s sudah terdaftar. Silakan gunakan username lain.\n", userstr);
+            return;
+        }
+    }
 
-    customStringCPY(gameState->users[gameState->userCount].name, username.TabWord);
-    customStringCPY(gameState->users[gameState->userCount].password, password.TabWord);
+    customStringCPY(gameState->users[gameState->userCount].name, userstr);
+    customStringCPY(gameState->users[gameState->userCount].password, pwdstr);
     gameState->users[gameState->userCount].money = 0;
     gameState->userCount++;
 
-    printf("Akun dengan username %s telah berhasil dibuat.\n", username);
+    printf("Akun dengan username %s telah berhasil dibuat.\n", userstr);
     printf("Silakan LOGIN untuk melanjutkan.\n");
 }
 
 void Save(const char *filename, GameState *gameState) {
+    if (!gameState->isLoaded && !gameState->isStarted) {
+        printf("Game belum dimulai. Tidak ada data yang disimpan.\n");
+        return;
+    }
     if (filename == NULL || *filename == '\0') {
         printf("Nama file tidak valid.\n");
         return;
@@ -357,17 +428,6 @@ void Save(const char *filename, GameState *gameState) {
 
     closeFile(file);
     printf("Game berhasil disimpan dalam %s.\n", filepath);
-}
-
-void Logout(User *users, int user_count) {
-    if (!isLoggedIn) {
-        printf("Anda belum login. Silakan login terlebih dahulu.\n");
-        return;
-    }
-
-    printf("%s telah login dari sistem PURRMART. Silahkan REGISTER/LOGIN kembali untuk melanjutkan.\n", currentUser);
-    isLoggedIn = FALSE;
-    currentUser[0] = '\0';
 }
 
 int customStringCMP(const char *str1, const char *str2){
@@ -414,7 +474,7 @@ void makeListItem(GameState *gameState) {
 }
 
 /* buat ngetes hasil load-an tadi*/
-void testGameState(GameState *gameState) {
+void printLoad(GameState *gameState) {
     printf("\n=== Testing Game State ===\n");
     
     if (gameState->itemList.itemLength == 0) {
@@ -443,5 +503,319 @@ void testGameState(GameState *gameState) {
     }
 
     printf("\nStatus Inisialisasi: %s\n", 
-           gameState->isInitialized ? "Sudah Terinisialisasi" : "Belum Terinisialisasi");
+           gameState->isLoaded ? "Sudah Terinisialisasi" : "Belum Terinisialisasi");
+}
+
+// Work
+
+// void delay(int seconds) {
+//     time_t start_time = time(NULL);
+//     while (time(NULL) - start_time < seconds);
+// }
+
+// //Implementasi fungsi pengumpulan input
+// void collectInput(char *input){ //input per kata jadiin kalimat
+//     input[0] = '\0'; //inisialisasi
+//     Word currentWord;
+
+//     while(!EndWord){
+//         int len = my_strlen(input);
+
+//         if(len + currentWord.Length + 1 > 100){ //cek apakah kata yang akan dimasukkan melebihi panjang maksimum
+//             break;
+//         }
+
+//         for (int i = 0; i < currentWord.Length; i++){
+//             input[len + i] = currentWord.TabWord[i];
+//         }
+//         input[len + currentWord.Length] = ' '; //tambahin spasi tiap akhir kata
+//         input[len + currentWord.Length + 1] = '\0'; //terminate string
+//         ADVWORD();
+//     }
+    
+//     int len = my_strlen(input);
+//     if(len > 0 && input[len - 1] == ' '){
+//         input[len - 1] = '\0'; //hapus spasi terakhir
+//     }
+// }
+
+
+
+// void work(int *balance){
+//     Work workList[] = {
+//         {"Asisten Praktikum Alstrukdat", 1000, 10},
+//         {"Penghangat Kursi Labdas", 500, 6},
+//         {"Teknisi Wifi Eduroam", 700, 8}
+//     };
+
+//     int workCount = sizeof(workList) / sizeof(workList[0]); //jumlah pekerjaan tersedia
+
+//     printf(">> WORK\nDaftar pekerjaan:\n"); //print daftar pekerjaan yang tersedia
+//     for(int i = 0; i < workCount; i++){
+//         printf("%d. %s (pendapatan: %d, durasi: %ds)\n", i+1, workList[i].workName, workList[i].workPayment, workList[i].workDuration);
+//     }
+
+//     boolean validWork = FALSE; //inisialisasi
+//     char selectedWork[100];
+//     int selectedWorkIndex;
+
+//     while(!validWork){
+//         printf("\nPilih nama pekerjaan: ");
+//         STARTWORD(); //baca input
+//         collectInput(selectedWork);
+
+//         for (int i = 0; i < workCount; i++){ //cek apakah pekerjaan yang dipilih valid
+//             if (my_strcmp(selectedWork, workList[i].workName) == 0){ //jika valid
+//                 validWork = TRUE;
+//                 selectedWorkIndex = i;
+//                 break;
+//             }
+//         }
+//         if (!validWork){ //jika tidak valid, kembali ke loop, input lagi
+//             printf("Pekerjaan tidak valid, silakan coba lagi. "); 
+//         }
+//     }
+
+//     printf("Anda sedang bekerja sebagai %s. Harap tunggu...\n", selectedWork);
+//     delay(workList[selectedWorkIndex].workDuration);
+//     printf("Pekerjaan telah selesai. Anda mendapatkan gaji $%d\n", workList[selectedWorkIndex].workPayment);
+
+//     balance += workList[selectedWorkIndex].workPayment;
+// }
+
+// store
+
+void storeList (ListItem *L) {
+    if (IsEmptyItem(L)) {
+        printf("TOKO KOSONG\n");
+    }
+    else { 
+        printf("List barang yang ada di toko: \n");
+        for (int i  = 0; i < L->itemLength; i ++) {
+            printf("");
+            printf("%d. %s\n", i + 1, L->item[i].name);
+        }
+    // }   
+    printf("\n");
+    // }
+    }
+}
+  // int itemCount = sizeof(itemList) / sizeof(itemList[0]);
+  
+void storeRequest(ListItem *L, QueueItem *Q) {
+    Word req;
+    char reqstr[MaxEl]; // Ensure sufficient size
+    boolean found = FALSE;
+
+    printf("Nama barang yang diminta: ");
+    STARTLINE();
+    req = currentWord;
+    wordToString(req, reqstr); // Convert Word to string
+
+    boolean isFoundInList = SearchItem(*L, reqstr);
+    if (isFoundInList) {
+        printf("Barang dengan nama yang sama sudah ada di toko\n");
+    } else if (isEmptyItem(*Q)) {
+        enqueueItem(Q, reqstr);
+    } else {
+        boolean foundInQueue = FALSE;
+        int queueLength = lengthQueueItem(*Q);
+
+        for (int i = 0; i < queueLength; i++) {
+            char temp[MaxEl];
+            dequeueItem(Q, temp); // Dequeue an item to temp
+            if (customStringCMP(temp, reqstr) == 0) {
+                foundInQueue = TRUE;
+            }
+            enqueueItem(Q, temp); // Re-enqueue the item
+        }
+
+        if (foundInQueue) {
+            printf("Barang dengan nama yang sama sudah ada di antrian\n");
+        } else {
+            enqueueItem(Q, reqstr);
+        }
+    }
+}
+
+void storeRemove(ListItem *L) {
+    Word item_name;
+    printf("Nama barang yang akan dihapus: ");
+    STARTLINE();
+    item_name = currentWord;
+    
+    char item_namestr[50];
+    wordToString(item_name, item_namestr);
+
+    
+    boolean found = 0;
+    int i = 0;
+
+    while (i < L->itemLength && !found) {
+        if (customStringCMP(item_namestr, (*L).item[i].name) == 0) {
+            found = 1;
+        }
+        i++;
+    }
+
+    if (found) {
+        DeleteAtItem(L, i-1);
+        printf("%s telah berhasil dihapus.\n", item_namestr);
+    }
+    else {
+        printf("Toko tidak menjual %s.\n", item_namestr);
+    }
+}
+
+void storeSupply(ListItem *L, QueueItem *Q) { 
+    if (!isEmptyItem(*Q)) {
+        char item_name[50];
+        dequeueItem(Q, item_name);
+        printf("Apakah kamu ingin menambahkan barang %s ke toko? (Terima/Tunda/Tolak): ", item_name);
+
+        Word response;
+        STARTLINE();
+        char responsestr;
+        response = currentWord;
+        wordToString(response, &responsestr);
+        boolean inputValid = FALSE;
+
+        while (!inputValid) {
+            if (customStringCMP(&responsestr, "Terima") == 0 || customStringCMP(&responsestr, "Tunda") == 0 || customStringCMP(&responsestr, "Tolak") == 0) {
+                inputValid = TRUE;
+            }
+            else {
+                printf("Input tidak valid. Silakan coba lagi: ");
+                scanWord(&response);
+                wordToString(response, &responsestr);
+            }
+        }
+
+        if (customStringCMP(&responsestr, "Terima") == 0) {
+            Word price;
+            printf("Harga barang: ");
+            scanWord(&price);
+            boolean validprice = FALSE;
+
+            while (!validprice) {
+                if (isWordInt(price)) {
+                    validprice = TRUE;
+                }
+                else {
+                    printf("Harga tidak valid. Silakan coba lagi: ");
+                    scanWord(&price);
+                }
+            }
+
+            int priceint = convertWordToInt(price);
+            Item new_item;
+            customStringCPY(new_item.name, item_name);
+            new_item.price = priceint;
+
+            insertLastItem(L, new_item);
+            printf("%s dengan harga %d telah ditambahkan ke toko.\n", item_name, priceint);
+        }
+        else if (customStringCMP(&responsestr, "Tunda") == 0) {
+            printf("%s dikembalikan ke antrian.\n", item_name);
+            enqueueItem(Q, item_name);
+        }
+        else if (customStringCMP(&responsestr, "Tolak") == 0) {
+            printf("%s dihapus dari antrian.\n", item_name);
+        }
+    }
+    else {
+        printf("Antrian kosong.\n");
+    }
+}
+
+boolean IsEmptyItem(ListItem *L) {
+    return L->itemLength == 0;
+}
+
+void DeleteAtItem(ListItem *L, IdxType i) {
+	int j = LastIdxItem(*L);
+	while (i < j) {
+		(*L).item[i] = (*L).item[i+1];
+        i++;
+	}
+    (*L).itemLength -= 1;
+}
+
+IdxType LastIdxItem(ListItem L) {
+	int i = 0;
+	while ((i < MaxEl) && (L.item[i+1].name[0] != '\0'))  {
+		i += 1;
+	}
+	return i;
+}
+
+boolean SearchItem(ListItem L, char *X) {
+	int i = 0;
+    
+	int j = L.itemLength;
+	boolean found = FALSE;
+	while ((i < L.itemLength) && !found) {
+		if (customStringCMP(L.item[i].name, X) == 0) {
+			found = TRUE;
+            // i++;
+		}
+		i += 1;
+	}
+    return found;
+}
+
+void CreateQueueItem(QueueItem *q) {
+    IDX_HEAD(*q) = IDX_UNDEF;
+    IDX_TAIL(*q) = IDX_UNDEF;
+}
+
+boolean isEmptyItem(QueueItem q){
+    return (IDX_HEAD(q) == IDX_UNDEF) && (IDX_TAIL(q) == IDX_UNDEF);
+}
+
+int lengthQueueItem(QueueItem q) {
+    if (isEmptyItem(q)) {
+        return 0;
+    } else {
+        return (IDX_TAIL(q) - IDX_HEAD(q) + 100) % 100 + 1;
+    }
+}
+
+void enqueueItem(QueueItem *q, char *item_name) {
+    if (q->idxTail == (q->idxHead - 1 + CAPACITY) % CAPACITY) {
+        printf("Queue is full! Cannot add new item.\n");
+        return;
+    }
+
+    if (isEmptyItem(*q)) {
+        IDX_HEAD(*q) = 0;
+        IDX_TAIL(*q) = 0;
+    } else {
+        IDX_TAIL(*q) = (IDX_TAIL(*q) + 1) % CAPACITY;
+    }
+    int i = 0;
+    while (item_name[i] != '\0' && i < 100 - 1) {
+        q->item_name[q->idxTail][i] = item_name[i];
+        i++;
+    }
+    q->item_name[q->idxTail][i] = '\0';
+}
+
+void dequeueItem(QueueItem *q, char *item_name) {   
+    customStringCPY(item_name, (q)->item_name[(q)->idxHead]);
+    if (lengthQueueItem(*q) == 1) {
+        CreateQueueItem(q);
+    } else {
+        IDX_HEAD(*q) = (IDX_HEAD(*q) + 1) % CAPACITY;
+    }
+}
+
+boolean isWordInt(Word w) {
+    int i = 0;
+    for (i = 0; i < w.Length; i++) {
+        if (w.TabWord[i] < '0' || w.TabWord[i] > '9') {
+            return FALSE;
+        }
+    }
+    return TRUE;
 }
