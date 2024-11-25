@@ -42,7 +42,6 @@ typedef struct {
 void showMainMenu();
 boolean Start(GameState *gameState);
 void Load(const char *filename, GameState *gameState);
-boolean loadGameState(GameState *gameState, const char *filename);
 void Login(User *users, int user_count);
 int findUser(User *users, int user_count, const char *username, const char *password);
 void Register(GameState *gameState);
@@ -52,5 +51,4 @@ int customStringCMP(const char *str1, const char *str2);
 void customStringCPY(char *dest, const char *src);
 void insertLastItem(ListItem *itemlist, Item item);
 void makeListItem(GameState *gameState);
-
 void testGameState(GameState *gameState);
