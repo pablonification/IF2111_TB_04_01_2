@@ -52,7 +52,7 @@ void showMainMenu(){
         command = currentWord;
 
 		if (compareWords("START", command, 5)){
-            Start("savefile.txt", isConfigLoaded, &isGameStarted);
+            Start(&gameState);
         } 
         else if (compareWords("LOAD", command, 4)){
             printf("Masukkan nama file yang akan diload: ");
@@ -61,8 +61,9 @@ void showMainMenu(){
             STARTLINE();
             filename = currentWord;
             
-            char file[50];
-            Load(filepath, &gameState);
+            char file[MAX_LEN];
+            wordToString(filename,file);
+            Load(file, &gameState);
         } 
         else if (compareWords("HELP", command, 4)){
             if (!isStarted){
@@ -168,70 +169,88 @@ void showMainMenu(){
      }
 }
 
-boolean Start(const char *filename, boolean isConfigLoaded, boolean *isGameStarted) {
-    *isGameStarted = TRUE;
-    if (!isConfigLoaded) {
+boolean Start(GameState *gameState) {
+    if (!gameState->isStateLoaded) {
         printf("Anda harus load file konfigurasi terlebih dahulu.\n");
-        return FALSE;
+        return gameState->isInitialized = FALSE;
     }
     else {
-            printf("Game berhasil dimulai. Selamat bermain!\n");
-            return TRUE;
+
+        printf("Game berhasil dimulai. Selamat bermain!\n");
+        return gameState->isInitialized = TRUE;
         }
 }
 
 
-void Load(char *fileName, GameState *gameState) {
-    STARTWORDFILE(fileName);
-
-    if (isKataInt(currentWord)) {
-        gameState->itemList.itemLength = WordToInt(currentWord);
-    } else {
-        printf("Error: Invalid number of items in configuration file.\n");
+void Load(const char *filename, GameState *gameState) {
+    if (filename == NULL || *filename == '\0') {
+        printf("Nama file tidak valid.\n");
         return;
     }
 
-    for (int i = 0; i < gameState->itemList.itemLength; i++) {
-        ADVWORDFILE();
-        if (!isKataInt(currentWord)) {
-            printf("Error: Invalid price for item %d.\n", i + 1);
-            return;
-        }
-        gameState->itemList.item[i].price = WordToInt(currentWord);
-
-        ADVWORDFILE();
-        wordToString(currentWord, gameState->itemList.item[i].name);
-    }
-
-    ADVWORDFILE();
-    if (isKataInt(currentWord)) {
-        gameState->userCount = WordToInt(currentWord);
-    } else {
-        printf("Error: Invalid number of users in configuration file.\n");
+    char filepath[100];
+    customStringCPY(filepath, "data/");
+    stringConcat(filepath, filename);
+    
+    FILE *file = openFile(filepath, "r");
+    if (file == NULL) {
+        printf("Save file tidak ditemukan. PURRMART gagal dijalankan.\n");
         return;
     }
 
-    for (int i = 0; i < gameState->userCount; i++) {
-        ADVWORDFILE(); 
-        if (!isKataInt(currentWord)) {
-            printf("Error: Invalid money value for user %d.\n", i + 1);
-            return;
-        }
-        gameState->users[i].money = WordToInt(currentWord);
+    makeListItem(gameState);
 
-        ADVWORDFILE();
-        wordToString(currentWord, gameState->users[i].name);
-
-        ADVWORDFILE();
-        wordToString(currentWord, gameState->users[i].password);
+    int itemCount;
+    if (readFile(file, "%d", &itemCount) != 1) {
+        printf("Kesalahan format file: jumlah item tidak valid.\n");
+        closeFile(file);
+        return;
     }
 
+    for (int i = 0; i < itemCount; i++) {
+        int price;
+        char name[MAX_LEN];
+        
+        if (readItem(file, "%d %[^\n]", &price, name) != 2) {
+            printf("Kesalahan format file: data item tidak valid.\n");
+            closeFile(file);
+            return;
+        }
 
-    gameState->isInitialized = TRUE;
+        gameState->itemList.item[i].price = price;
+        customStringCPY(gameState->itemList.item[i].name, name);
+        gameState->itemList.itemLength++;
+    }
+
+    int userCount;
+    if (readFile(file, "%d", &userCount) != 1) {
+        printf("Kesalahan format file: jumlah user tidak valid.\n");
+        closeFile(file);
+        return;
+    }
+
+    for (int i = 0; i < userCount; i++) {
+        int money;
+        char username[MAX_LEN], password[MAX_LEN];
+        
+        if (readUser(file, "%d %s %s", &money, username, password) != 3) {
+            printf("Kesalahan format file: data user tidak valid.\n");
+            closeFile(file);
+            return;
+        }
+
+        gameState->users[i].money = money;
+        customStringCPY(gameState->users[i].name, username);
+        customStringCPY(gameState->users[i].password, password);
+        gameState->userCount++;
+    }
+
     gameState->isStateLoaded = TRUE;
-
-    printf("Load berhasil dijalankan.\n");
+    closeFile(file);
+    testGameState(gameState);
+    printf("File konfigurasi berhasil diload. PURRMART siap digunakan.\n");
 }
+
 
 int findUser(User *users, int user_count, const char *username, const char *password) {
     for (int i = 0; i < user_count; i++) {
@@ -395,32 +414,34 @@ void makeListItem(GameState *gameState) {
 }
 
 /* buat ngetes hasil load-an tadi*/
-// void testGameState(GameState *gameState) {
-//     printf("\n=== Testing Game State ===\n");
+void testGameState(GameState *gameState) {
+    printf("\n=== Testing Game State ===\n");
     
-//     if (gameState->itemList.jumlahItem == 0) {
-//         printf("Tidak ada item.\n");
-//     } else {
-//             printf("%d. %s (Harga: %d)\n", 
-//                    i + 1, 
-//                    gameState->itemList.item[i].name, 
-//                    gameState->itemList.item[i].price);
-//         }
-//     }
+    if (gameState->itemList.itemLength == 0) {
+        printf("Tidak ada item.\n");
+    } else {
+        for (int i = 0; i < gameState->itemList.itemLength; i++) {
+                printf("%d. %s (Harga: %d)\n", 
+                    i + 1, 
+                    gameState->itemList.item[i].name, 
+                    gameState->itemList.item[i].price);
+        }
+    }
     
-//     printf("\nDaftar User (%d user):\n", gameState->userCount);
-//     if (gameState->userCount == 0) {
-//         printf("Tidak ada user terdaftar.\n");
-//     } else {
-//         for (int i = 0; i < gameState->userCount; i++) {
-//             printf("%d. Username: %s, Password: %s, Saldo: %d\n", 
-//                    i + 1, 
-//                    gameState->users[i].name, 
-//                    gameState->users[i].password, 
-//                    gameState->users[i].money);
-//         }
-//     }
+    
+    printf("\nDaftar User (%d user):\n", gameState->userCount);
+    if (gameState->userCount == 0) {
+        printf("Tidak ada user terdaftar.\n");
+    } else {
+        for (int i = 0; i < gameState->userCount; i++) {
+            printf("%d. Username: %s, Password: %s, Saldo: %d\n", 
+                   i + 1, 
+                   gameState->users[i].name, 
+                   gameState->users[i].password, 
+                   gameState->users[i].money);
+        }
+    }
 
-//     printf("\nStatus Inisialisasi: %s\n", 
-//            gameState->isInitialized ? "Sudah Terinisialisasi" : "Belum Terinisialisasi");
-// }
+    printf("\nStatus Inisialisasi: %s\n", 
+           gameState->isInitialized ? "Sudah Terinisialisasi" : "Belum Terinisialisasi");
+}

@@ -40,8 +40,8 @@ typedef struct {
 } GameState;
 
 void showMainMenu();
-boolean Start(const char *filename, boolean isConfigLoaded, boolean *isGameStarted);
-void Load(char *filename, GameState *gameState);
+boolean Start(GameState *gameState);
+void Load(const char *filename, GameState *gameState);
 boolean loadGameState(GameState *gameState, const char *filename);
 void Login(User *users, int user_count);
 int findUser(User *users, int user_count, const char *username, const char *password);
@@ -53,4 +53,4 @@ void customStringCPY(char *dest, const char *src);
 void insertLastItem(ListItem *itemlist, Item item);
 void makeListItem(GameState *gameState);
 
-// void testGameState(GameState *gameState);
+void testGameState(GameState *gameState);
