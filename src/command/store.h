@@ -28,4 +28,5 @@ IdxType LastIdxItem(ListItem L);
 
 boolean SearchItem(ListItem L, char *X);
 
+boolean isWordInt(Word w);
 #endif

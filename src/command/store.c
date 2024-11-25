@@ -93,46 +93,63 @@ void storeRemove(ListItem *L) {
 }
 
 void storeSupply(ListItem *L, QueueItem *Q) { 
-    char item_name[50];
-    dequeueItem(Q, item_name);
-    printf("Apakah kamu ingin menambahkan barang %s ke toko? (Terima/Tunda/Tolak): ", item_name);
+    if (!isEmptyItem(*Q)) {
+        char item_name[50];
+        dequeueItem(Q, item_name);
+        printf("Apakah kamu ingin menambahkan barang %s ke toko? (Terima/Tunda/Tolak): ", item_name);
 
-    Word response;
-    STARTLINE();
-    char responsestr;
-    response = currentWord;
-    wordToString(response, &responsestr);
-    boolean inputValid = FALSE;
+        Word response;
+        STARTLINE();
+        char responsestr;
+        response = currentWord;
+        wordToString(response, &responsestr);
+        boolean inputValid = FALSE;
 
-    while (!inputValid) {
-        if (customStringCMP(&responsestr, "Terima") == 0 || customStringCMP(&responsestr, "Tunda") == 0 || customStringCMP(&responsestr, "Tolak") == 0) {
-            inputValid = TRUE;
+        while (!inputValid) {
+            if (customStringCMP(&responsestr, "Terima") == 0 || customStringCMP(&responsestr, "Tunda") == 0 || customStringCMP(&responsestr, "Tolak") == 0) {
+                inputValid = TRUE;
+            }
+            else {
+                printf("Input tidak valid. Silakan coba lagi: ");
+                scanWord(&response);
+                wordToString(response, &responsestr);
+            }
         }
-        else {
-            printf("Input tidak valid. Silakan coba lagi: ");
-            scanWord(&response);
-            wordToString(response, &responsestr);
+
+        if (customStringCMP(&responsestr, "Terima") == 0) {
+            Word price;
+            printf("Harga barang: ");
+            scanWord(&price);
+            boolean validprice = FALSE;
+
+            while (!validprice) {
+                if (isWordInt(price)) {
+                    validprice = TRUE;
+                }
+                else {
+                    printf("Harga tidak valid. Silakan coba lagi: ");
+                    scanWord(&price);
+                }
+            }
+
+            int priceint = convertWordToInt(price);
+            Item new_item;
+            customStringCPY(new_item.name, item_name);
+            new_item.price = priceint;
+
+            insertLastItem(L, new_item);
+            printf("%s dengan harga %d telah ditambahkan ke toko.\n", item_name, priceint);
+        }
+        else if (customStringCMP(&responsestr, "Tunda") == 0) {
+            printf("%s dikembalikan ke antrian.\n", item_name);
+            enqueueItem(Q, item_name);
+        }
+        else if (customStringCMP(&responsestr, "Tolak") == 0) {
+            printf("%s dihapus dari antrian.\n", item_name);
         }
     }
-
-    if (customStringCMP(&responsestr, "Terima") == 0) {
-        Word price;
-        printf("Harga barang: ");
-        scanWord(&price);
-        int priceint = convertWordToInt(price);
-        Item new_item;
-        customStringCPY(new_item.name, item_name);
-        new_item.price = priceint;
-
-        insertLastItem(L, new_item);
-        printf("%s dengan harga %d telah ditambahkan ke toko.\n", item_name, priceint);
-    }
-    else if (customStringCMP(&responsestr, "Tunda") == 0) {
-        printf("%s dikembalikan ke antrian.\n", item_name);
-        enqueueItem(Q, item_name);
-    }
-    else if (customStringCMP(&responsestr, "Tolak") == 0) {
-        printf("%s dihapus dari antrian.\n", item_name);
+    else {
+        printf("Antrian kosong.\n");
     }
 }
 
@@ -161,7 +178,6 @@ boolean SearchItem(ListItem L, char *X) {
 	int i = 0;
     
 	int j = L.itemLength;
-    printf("%d\n", j);
 	boolean found = FALSE;
 	while ((i < L.itemLength) && !found) {
 		if (customStringCMP(L.item[i].name, X) == 0) {
@@ -171,6 +187,62 @@ boolean SearchItem(ListItem L, char *X) {
 		i += 1;
 	}
     return found;
+}
+
+void CreateQueueItem(QueueItem *q) {
+    IDX_HEAD(*q) = IDX_UNDEF;
+    IDX_TAIL(*q) = IDX_UNDEF;
+}
+
+boolean isEmptyItem(QueueItem q){
+    return (IDX_HEAD(q) == IDX_UNDEF) && (IDX_TAIL(q) == IDX_UNDEF);
+}
+
+int lengthQueueItem(QueueItem q) {
+    if (isEmptyItem(q)) {
+        return 0;
+    } else {
+        return (IDX_TAIL(q) - IDX_HEAD(q) + 100) % 100 + 1;
+    }
+}
+
+void enqueueItem(QueueItem *q, char *item_name) {
+    if (q->idxTail == (q->idxHead - 1 + CAPACITY) % CAPACITY) {
+        printf("Queue is full! Cannot add new item.\n");
+        return;
+    }
+
+    if (isEmptyItem(*q)) {
+        IDX_HEAD(*q) = 0;
+        IDX_TAIL(*q) = 0;
+    } else {
+        IDX_TAIL(*q) = (IDX_TAIL(*q) + 1) % CAPACITY;
+    }
+    int i = 0;
+    while (item_name[i] != '\0' && i < 100 - 1) {
+        q->item_name[q->idxTail][i] = item_name[i];
+        i++;
+    }
+    q->item_name[q->idxTail][i] = '\0';
+}
+
+void dequeueItem(QueueItem *q, char *item_name) {   
+    customStringCPY(item_name, (q)->item_name[(q)->idxHead]);
+    if (lengthQueueItem(*q) == 1) {
+        CreateQueueItem(q);
+    } else {
+        IDX_HEAD(*q) = (IDX_HEAD(*q) + 1) % CAPACITY;
+    }
+}
+
+boolean isWordInt(Word w) {
+    int i = 0;
+    for (i = 0; i < w.Length; i++) {
+        if (w.TabWord[i] < '0' || w.TabWord[i] > '9') {
+            return FALSE;
+        }
+    }
+    return TRUE;
 }
 
 int main() {

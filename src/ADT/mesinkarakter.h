@@ -44,4 +44,14 @@ void ADV();
           currentChar mungkin = MARK
           Jika  currentChar = MARK maka EOP akan menyala (true) */
 
+
+FILE* openFile(const char* filepath, const char* mode);
+int readFile(FILE *f, const char *format, int *num);
+int readItem(FILE *f, const char *format, int *num, char *str);
+int readUser(FILE *f, const char *format, int *num, char *str1, char *str2);
+void writeItem(FILE *f, const char *format, int num1, char *str1);
+void writeLen(FILE *f, const char *format, int num1);
+void writeUser(FILE *f, const char *format, int num1, char *str1, char *str2);
+void closeFile(FILE *f);
+
 #endif
