@@ -15,4 +15,8 @@ void delay(int seconds);
 
 void collectInput(char *input);
 
+int my_strlen(char *str);
+
+boolean my_strcmp(char *str1, char *str2);
+
 #endif

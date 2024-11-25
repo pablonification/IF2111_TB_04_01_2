@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "../ADT/mesinkata.h"
 #include "../ADT/mesinkarakter.h"
 #include "../ADT/boolean.h"
