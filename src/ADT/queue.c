@@ -15,17 +15,6 @@ void CreateQueue(Queue *q)
     IDX_TAIL(*q) = IDX_UNDEF;
 }
 
-void CreateQueueItem(QueueItem *q)
-/* I.S. sembarang */
-/* F.S. Sebuah q kosong terbentuk dengan kondisi sbb: */
-/* - Index head bernilai IDX_UNDEF */
-/* - Index tail bernilai IDX_UNDEF */
-/* Proses : Melakukan alokasi, membuat sebuah q kosong */
-{
-    IDX_HEAD(*q) = IDX_UNDEF;
-    IDX_TAIL(*q) = IDX_UNDEF;
-}
-
 /* ********* Prototype ********* */
 boolean isEmpty(Queue q)
 /* Mengirim true jika q kosong: lihat definisi di atas */
@@ -33,11 +22,6 @@ boolean isEmpty(Queue q)
     return (IDX_HEAD(q) == IDX_UNDEF) && (IDX_TAIL(q) == IDX_UNDEF);
 }
 
-boolean isEmptyItem(QueueItem q)
-/* Mengirim true jika q kosong: lihat definisi di atas */
-{
-    return (IDX_HEAD(q) == IDX_UNDEF) && (IDX_TAIL(q) == IDX_UNDEF);
-}
 
 boolean isFull(Queue q)
 /* Mengirim true jika tabel penampung elemen q sudah penuh */
@@ -57,15 +41,6 @@ int length(Queue q)
     }
 }
 
-int lengthQueueItem(QueueItem q)
-/* Mengirimkan banyaknya elemen queue. Mengirimkan 0 jika q kosong. */
-{
-    if (isEmptyItem(q)) {
-        return 0;
-    } else {
-        return (IDX_TAIL(q) - IDX_HEAD(q) + 100) % 100 + 1;
-    }
-}
 
 /* *** Primitif Add/Delete *** */
 void enqueue(Queue *q, ElType val)
@@ -82,29 +57,6 @@ void enqueue(Queue *q, ElType val)
     TAIL(*q) = val;
 }
 
-void enqueueItem(QueueItem *q, char *item_name)
-/* Proses: Menambahkan val pada q dengan aturan FIFO */
-/* I.S. q mungkin kosong, tabel penampung elemen q TIDAK penuh */
-/* F.S. val menjadi TAIL yang baru, IDX_TAIL "mundur" dalam buffer melingkar. */
-{
-    if (q->idxTail == (q->idxHead - 1 + CAPACITY) % CAPACITY) {
-        printf("Queue is full! Cannot add new item.\n");
-        return;
-    }
-
-    if (isEmptyItem(*q)) {
-        IDX_HEAD(*q) = 0;
-        IDX_TAIL(*q) = 0;
-    } else {
-        IDX_TAIL(*q) = (IDX_TAIL(*q) + 1) % CAPACITY;
-    }
-    int i = 0;
-    while (item_name[i] != '\0' && i < 100 - 1) {
-        q->item_name[q->idxTail][i] = item_name[i];
-        i++;
-    }
-    q->item_name[q->idxTail][i] = '\0';
-}
 
 void dequeue(Queue *q, ElType *val)
 /* Proses: Menghapus val pada q dengan aturan FIFO */
@@ -120,19 +72,6 @@ void dequeue(Queue *q, ElType *val)
     }
 }
 
-void dequeueItem(QueueItem *q, char *item_name)
-/* Proses: Menghapus val pada q dengan aturan FIFO */
-/* I.S. q tidak mungkin kosong */
-/* F.S. val = nilai elemen HEAD pd I.S., IDX_HEAD "mundur";
-        q mungkin kosong */
-{   
-    customStringCPY(item_name, (q)->item_name[(q)->idxHead]);
-    if (lengthQueueItem(*q) == 1) {
-        CreateQueueItem(q);
-    } else {
-        IDX_HEAD(*q) = (IDX_HEAD(*q) + 1) % CAPACITY;
-    }
-}
 
 /* *** Display Queue *** */
 void displayQueue(Queue q)
