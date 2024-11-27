@@ -13,8 +13,8 @@ Tugas besar ini berisi program PurrMart Toserba yang memungkinkan pengguna untuk
 Terdapat konfigurasi file yang berisi daftar barang dan daftar pengguna yang terdaftar pada program PurrMart Toserba dan dapat menghasilkan save file konfigurasi baru ketika perubahan yang terjadi saat program dijalankan tersimpan.
 
 <h3>Program dapat dijalankan dengan cara sebagai berikut</h3>
-'''	gcc -I src -I src/ADT  main.c src/misc.c src/ADT/mesinkarakter.c src/ADT/mesinkata.c src/ADT/queue.c src/ADT/list.c src/wordl32.c src/rng.c src/qwordl3.c -o main'''
+```gcc -I src -I src/ADT  main.c src/misc.c src/ADT/mesinkarakter.c src/ADT/mesinkata.c src/ADT/queue.c src/ADT/list.c src/wordl32.c src/rng.c src/qwordl3.c -o main```
 
-Setelah program dijalankan, perlu dilakukan **LOAD** diikuti dengan **<namafile>.txt" dan ketika sudah  berhasil dijalankan, pengguna dapat mengakses fitur yang ada di PurrMart Toserba secara lengkap.
+Setelah program dijalankan, perlu dilakukan **LOAD** diikuti dengan **<namafile>.txt** dan ketika sudah  berhasil dijalankan, pengguna dapat mengakses fitur yang ada di PurrMart Toserba secara lengkap.
 
 Selamat mencoba!
